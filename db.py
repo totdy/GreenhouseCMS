@@ -28,13 +28,13 @@ class Harvests(Base):
 def AddHarvestData () -> None:
     with session() as new_session:
         new_request = Harvests(
-            date = "",
-            zone = "",
-            plant_type = "",
-            plant_subtype = "",
-            count = "",
-            count_unit = "",
-            unit_price = "",
+            date = date.today(),
+            zone = "G1",
+            plant_type = "tomato",
+            plant_subtype = "cherry",
+            count = 0.0,
+            count_unit = "kg",
+            unit_price = 0.0,
             note = "",
         )
 
