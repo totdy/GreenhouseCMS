@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from db import AddHarvestData, Base, GetHarvests, engine
 
+from schemas import HarvestPayload
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(engine)
@@ -26,10 +28,9 @@ app.add_middleware(
 
 @app.get("/harvests")
 def GetMyHarvests():
-    AllHarvests = GetHarvests()
-    return AllHarvests
+    return GetHarvests()
 
 @app.post("/harvests")
-def AddNewHarvests():
-    AddHarvestData()
-    return {200}
+def AddNewHarvests(payload: HarvestPayload):    
+    AddHarvestData(payload)
+    return {"success": True, "inserted": len(payload.data)}
