@@ -4,10 +4,10 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from db import AddHarvestData, UpdateHarvestData, GetHarvests, GetHarvestById, engine
-from models import Base
+from src.db import AddHarvestData, UpdateHarvestData, GetHarvests, GetHarvestById, engine
+from src.models import Base
 
-from schemas import HarvestPayload, HarvestItem
+from src.schemas import HarvestPayload, HarvestItem
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -30,7 +30,7 @@ app.add_middleware(
 
 @app.get("/harvests")
 def GetMyHarvests():
-    return GetHarvests()
+    return {"data": GetHarvests()}
 
 @app.post("/harvests")
 def AddNewHarvests(payload: HarvestPayload):
@@ -38,11 +38,11 @@ def AddNewHarvests(payload: HarvestPayload):
     return {"success": True, "inserted": len(payload.data)}
 
 @app.put("/harvests/{id}")
-def UpdateMyHarvest(id: int, data: HarvestItem):
+def UpdateMyHarvest(id: int, payload: HarvestItem):
     if not GetHarvestById(id):
         raise HTTPException(status_code=404, detail="Harvest not found")
     
-    UpdateHarvestData(id, data)
+    UpdateHarvestData(id, payload)
     return {"success": True}
 
 if __name__ == "__main__":

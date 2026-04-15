@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine, select, update
 from sqlalchemy.orm import sessionmaker
 
-from schemas import HarvestPayload, HarvestItem
+from src.schemas import HarvestPayload, HarvestItem
 
-from models import Harvests
+from src.models import Harvests
 
 engine = create_engine(url="sqlite:///greenhouse.db")
 
@@ -36,19 +36,19 @@ def AddHarvestData(payload: HarvestPayload) -> None:
             new_session.add(new_entry)
         new_session.commit()
     
-def UpdateHarvestData(id: int, data: HarvestItem) -> None:
+def UpdateHarvestData(id: int, payload: HarvestItem) -> None:
     with session() as new_session:
         update_entry = (
             update(Harvests)
             .filter_by(id = id)
             .values(
-                date = data.date,
-                plant_type = data.plant_type,
-                plant_subtype = data.plant_subtype,
-                count = data.count,
-                count_unit = data.count_unit,
-                unit_price = data.unit_price,
-                note = data.note,
+                date = payload.date,
+                plant_type = payload.plant_type,
+                plant_subtype = payload.plant_subtype,
+                count = payload.count,
+                count_unit = payload.count_unit,
+                unit_price = payload.unit_price,
+                note = payload.note,
             )
         )
         new_session.execute(update_entry)
