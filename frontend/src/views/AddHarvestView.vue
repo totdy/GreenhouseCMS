@@ -3,6 +3,10 @@ import { ref } from "vue"
 import type { HarvestItem } from "@/scripts/types"
 import { addHarvests } from "@/scripts/api"
 
+const isLoading = ref(false)
+const error = ref<string | null>(null)
+const successMsg = ref<string | null>(null)
+
 const createEmptyRow = (): HarvestItem => ({
     date: "",
     plant_type: "",
@@ -24,7 +28,18 @@ function removeRow(index: number) {
 }
 
 async function handleSubmit() {
-    await addHarvests({ data: rows.value })
+    isLoading.value = true
+    error.value = null
+    successMsg.value = null
+
+    try {
+        const result = await addHarvests({ data: rows.value })
+        successMsg.value = `Inserted ${result.data} row(s) successfully!`
+    } catch (err: any) {
+        error.value = err.message
+    } finally {
+        isLoading.value = false
+    }
 }
 </script>
 
@@ -34,7 +49,7 @@ async function handleSubmit() {
         <div v-for="(row, index) in rows" :key="index">
             <input v-model="row.date" type="date" required />
             <input v-model="row.plant_type" placeholder="Plant type" required />
-            <input v-model="row.plant_subtype" placeholder="Plant subtype" required />
+            <input v-model="row.plant_subtype" placeholder="Plant subtype" />
             <input v-model.number="row.count" type="number" step="0.01" required />
             <input v-model="row.count_unit" placeholder="Unit" required />
             <input v-model.number="row.unit_price" type="number" step="0.0001" required />
@@ -43,7 +58,11 @@ async function handleSubmit() {
         </div>
 
         <button type="button" @click="addRow">+ Add Row</button>
-        <button type="submit">Submit All</button>
+        <button type="submit" :disabled="isLoading">
+            {{ isLoading ? "Saving..." : "Submit All" }}
+        </button>
 
+        <p v-if="successMsg" style="color: green">{{ successMsg }}</p>
+        <p v-if="error" style="color: red">{{ error }}</p>
     </form>
 </template>
