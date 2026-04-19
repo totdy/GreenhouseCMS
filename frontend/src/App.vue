@@ -1,19 +1,34 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-
-
+import ThemeToggle from "./components/ThemeToggle.vue";
 </script>
 
 <template>
-  <header>
+  <main>
     <nav>
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/add">Add</RouterLink>
+      <ThemeToggle />
     </nav>
-  </header>
-  <main>
     <RouterView />
   </main>
 </template>
 
-<style scoped></style>
+<style scoped>
+nav {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  a {
+    padding: 0.5rem 1rem;
+  }
+}
+
+main {
+  max-width: 60rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+</style>

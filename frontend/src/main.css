@@ -55,7 +55,7 @@ h3{
 }
 
 #app {    
-    /*background-image: linear-gradient(45deg, var(--bg1), var(--bg2), var(--bg1));*/
+    background-image: linear-gradient(45deg, var(--bg1), var(--bg2), var(--bg1));
     
     padding: 1rem;
     
