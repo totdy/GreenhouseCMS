@@ -1,5 +1,5 @@
 export interface HarvestItem {
-  date: string           // "YYYY-MM-DD"
+  date: string
   plant_type: string
   plant_subtype: string
   count: number

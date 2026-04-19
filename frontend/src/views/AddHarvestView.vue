@@ -8,7 +8,7 @@ const error = ref<string | null>(null)
 const successMsg = ref<string | null>(null)
 
 const createEmptyRow = (): HarvestItem => ({
-    date: "",
+    date: new Date().toISOString().split("T")[0] || "",
     plant_type: "",
     plant_subtype: "",
     count: 0,
@@ -46,15 +46,41 @@ async function handleSubmit() {
 <template>
     <form @submit.prevent="handleSubmit">
 
-        <div v-for="(row, index) in rows" :key="index">
-            <input v-model="row.date" type="date" required />
-            <input v-model="row.plant_type" placeholder="Plant type" required />
-            <input v-model="row.plant_subtype" placeholder="Plant subtype" />
-            <input v-model.number="row.count" type="number" step="0.01" required />
-            <input v-model="row.count_unit" placeholder="Unit" required />
-            <input v-model.number="row.unit_price" type="number" step="0.0001" required />
-            <textarea v-model="row.note" placeholder="Note" />
-            <button type="button" @click="removeRow(index)">Remove</button>
+        <div v-for="(row, index) in rows" :key="index" class="rows">
+            <div>
+                <label>Day</label>
+                <input v-model="row.date" type="date" required />
+            </div>
+            <div>
+                <label>Type</label>
+                <input v-model="row.plant_type" placeholder="Tomato" required />
+            </div>
+            <div>
+                <label>Subtype</label>
+                <input v-model="row.plant_subtype" placeholder="Cherry" />
+            </div>
+            <div>
+                <label>Count</label>
+                <input v-model.number="row.count" type="number" step="0.1" min="0" required />
+            </div>
+            <div>
+                <label>Unit</label>
+                <select v-model="row.count_unit" required>
+                    <option disabled value="">Unit</option>
+                    <option value="kg">kgs</option>
+                    <option value="box">boxes</option>
+                    <option value="bunch">bunches</option>
+                </select>
+            </div>
+            <div>
+                <label>Price</label>
+                <input v-model.number="row.unit_price" type="number" step="0.05" min="0" required />
+            </div>
+            <div>
+                <label>Note</label>
+                <textarea v-model="row.note" placeholder="Note" />
+            </div>
+            <button type="button" @click="removeRow(index)">x Remove</button>
         </div>
 
         <button type="button" @click="addRow">+ Add Row</button>
@@ -62,7 +88,28 @@ async function handleSubmit() {
             {{ isLoading ? "Saving..." : "Submit All" }}
         </button>
 
-        <p v-if="successMsg" style="color: green">{{ successMsg }}</p>
-        <p v-if="error" style="color: red">{{ error }}</p>
+        <p v-if="successMsg" class="success">{{ successMsg }}</p>
+        <p v-if="error" class="error">{{ error }}</p>
+
     </form>
 </template>
+<style lang="css" scoped>
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
+
+.rows {
+    display: flex;
+    flex-direction: row;
+
+    div {
+        display: flex;
+        flex-direction: column;
+        width: 5.5rem;
+    }
+}
+</style>
