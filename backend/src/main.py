@@ -4,10 +4,10 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from src.db import AddHarvestData, UpdateHarvestData, GetHarvests, GetHarvestById, engine
+from src.db import AddHarvestData, UpdateHarvestData, GetHarvests, GetHarvestById, GetRevenueByDate, engine
 from src.models import Base
 
-from src.schemas import HarvestPayload, HarvestItem
+from src.schemas import HarvestPayload, HarvestItem, RevenueByDateItem
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,6 +31,11 @@ app.add_middleware(
 @app.get("/harvests")
 def GetMyHarvests():
     return {"data": GetHarvests()}
+
+@app.get("/harvests/revenue-by-date")
+def GetHarvestRevenueByDate():
+    rows = GetRevenueByDate()
+    return {"data": [RevenueByDateItem(date=row.date, revenue=row.revenue) for row in rows]}
 
 @app.post("/harvests")
 def AddNewHarvests(payload: HarvestPayload):

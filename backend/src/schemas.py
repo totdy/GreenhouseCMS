@@ -13,3 +13,7 @@ class HarvestItem(BaseModel):
 
 class HarvestPayload(BaseModel):
     data: list[HarvestItem]
+
+class RevenueByDateItem(BaseModel):
+    date: date
+    revenue: float

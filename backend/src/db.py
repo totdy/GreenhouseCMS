@@ -1,7 +1,7 @@
-from sqlalchemy import create_engine, select, update
+from sqlalchemy import create_engine, select, update, func
 from sqlalchemy.orm import sessionmaker
 
-from src.schemas import HarvestPayload, HarvestItem
+from src.schemas import HarvestPayload, HarvestItem, RevenueByDateItem
 
 from src.models import Harvests
 
@@ -53,3 +53,16 @@ def UpdateHarvestData(id: int, payload: HarvestItem) -> None:
         )
         new_session.execute(update_entry)
         new_session.commit()
+
+def GetRevenueByDate() -> list[RevenueByDateItem]:
+    with session() as new_session:
+        query = (
+            select(
+                Harvests.date,
+                func.round(func.sum(Harvests.count * Harvests.unit_price), 2).label("revenue"),
+            )
+            .group_by(Harvests.date)
+            .order_by(Harvests.date)
+        )
+        result = new_session.execute(query)
+        return result.all() # type: ignore
