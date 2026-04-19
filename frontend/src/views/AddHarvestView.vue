@@ -45,6 +45,7 @@ async function handleSubmit() {
 
 <template>
     <form @submit.prevent="handleSubmit">
+        <button type="button" @click="addRow">+ Add Row</button>
 
         <div v-for="(row, index) in rows" :key="index" class="rows">
             <div>
@@ -78,13 +79,12 @@ async function handleSubmit() {
             </div>
             <div>
                 <label>Note</label>
-                <textarea v-model="row.note" placeholder="Note" />
+                <textarea v-model="row.note" placeholder="Note" rows="1" />
             </div>
-            <button type="button" @click="removeRow(index)">x Remove</button>
-        </div>
+            <button class="remove" type="button" @click="removeRow(index)">x Remove</button>
+        </div>        
 
-        <button type="button" @click="addRow">+ Add Row</button>
-        <button type="submit" :disabled="isLoading">
+        <button type="submit" :disabled="isLoading || rows.length === 0 ">
             {{ isLoading ? "Saving..." : "Submit All" }}
         </button>
 
@@ -102,14 +102,47 @@ async function handleSubmit() {
     color: red;
 }
 
-.rows {
+form {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.rows {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) ;
+    gap: 0.5rem;
+
+    background-color: var(--bg1);
+    padding: 1rem;
+    border-radius: 0.5rem;
+
+    position: relative;
 
     div {
         display: flex;
-        flex-direction: column;
-        width: 5.5rem;
+        flex-direction: column;        
+
+        input, select, textarea {
+            border: none;
+            border-radius: 0.5rem;
+
+            padding: 0.5rem;
+
+            height: 2rem;
+            
+            background-color: var(--bg2);            
+        }
     }
+}
+.remove{
+    align-self: end;
+
+    width: -webkit-fill-available;
+
+    background-color: rgb(255, 134, 134);
+    color: red;
+
+    padding: 0.4rem 0.6rem;
 }
 </style>

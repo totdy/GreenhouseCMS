@@ -14,7 +14,7 @@ import ThemeToggle from "./components/ThemeToggle.vue";
   </main>
 </template>
 
-<style scoped>
+<style lang="css" scoped>
 nav {
   display: flex;
   flex-direction: row;
