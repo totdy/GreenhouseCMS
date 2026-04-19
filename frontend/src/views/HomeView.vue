@@ -4,33 +4,37 @@ import { onMounted, ref } from 'vue';
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
-const data = [
-    { year: 2010, count: 10 },
-    { year: 2011, count: 20 },
-    { year: 2012, count: 15 },
-    { year: 2013, count: 25 },
-    { year: 2014, count: 22 },
-    { year: 2015, count: 30 },
-    { year: 2016, count: 28 },
-];
-
-onMounted(() => {
+onMounted(async () => {
     if (!canvasRef.value) return;
 
+    const res = await fetch('http://localhost:8000/harvests/revenue-by-date');
+    const json = await res.json();
+    const data: { date: string; revenue: number }[] = json.data;
+
     new Chart(canvasRef.value, {
-        type: "bar",
+        type: 'line',
         data: {
-            labels: data.map(row => row.year),
+            labels: data.map(row => row.date),
             datasets: [
                 {
-                    label: "Acquisitions by year",
-                    data: data.map(row => row.count)
+                    label: 'Revenue',
+                    data: data.map(row => row.revenue),
+                    borderColor: '#4caf82',
+                    backgroundColor: 'rgba(76, 175, 130, 0.1)',
+                    fill: true,
+                    tension: 0.3,
                 }
             ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { title: { display: true, text: 'Date' } },
+                y: { title: { display: true, text: 'Revenue' }, beginAtZero: true },
+            }
         }
     });
 });
-
 </script>
 
 <template>
