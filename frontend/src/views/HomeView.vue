@@ -38,9 +38,14 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div style="width: 600px;">
+    <div>
         <canvas ref="canvasRef"></canvas>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+div{
+    
+    width: -webkit-fill-available;
+}
+</style>

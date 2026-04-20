@@ -1,6 +1,6 @@
 import type { HarvestPayload } from "@/scripts/types"
 
-const BASE_URL = "http://localhost:8000"
+const BASE_URL = "http://192.168.1.69:8000"
 
 export async function addHarvests(payload: HarvestPayload) {
     const response = await fetch(`${BASE_URL}/harvests`, {

@@ -133,10 +133,17 @@ form {
 
             height: 2rem;
             
-            background-color: var(--bg2);            
+            background-color: var(--bg2);
         }
     }
 }
+
+@media (max-width: 900px) {
+    .rows {
+        grid-template-columns: 1fr;
+    }
+}
+
 button{
     background-color: var(--bg1);
 
@@ -151,6 +158,7 @@ button{
 
     width: -webkit-fill-available;
 
-    background-color: rgb(207, 207, 207);  
+    background-color: rgb(207, 207, 207);
 }
+
 </style>

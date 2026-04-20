@@ -19,6 +19,7 @@ nav {
   display: flex;
   flex-direction: row;
   gap: 1rem;
+  align-items: center;
 
   a {
     padding: 0.5rem 1rem;
@@ -27,6 +28,7 @@ nav {
 
 main {
   max-width: 60rem;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
