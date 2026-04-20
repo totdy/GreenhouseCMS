@@ -12,3 +12,10 @@ export async function addHarvests(payload: HarvestPayload) {
     if (!response.ok) throw new Error(`Error: ${response.statusText}`)
     return response.json()
 }
+
+export async function GetRevenueByDate() {
+    const response = await fetch(`${BASE_URL}/harvests/revenue-by-date`);
+    
+    if (!response.ok) throw new Error(`Error: ${response.statusText}`)
+    return response.json()
+}

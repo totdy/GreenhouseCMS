@@ -1,13 +1,13 @@
 :root[data-theme="light"] {
     --bg1: #fff;
-    --bg2: #cdb7ff;
+    --bg2: #a9dbad;
     --tc: #272727;
     --tch: #000
 }
 
 :root[data-theme="dark"] {
-    --bg1: #11031d;
-    --bg2: #28194d;
+    --bg1: #031d05;
+    --bg2: #194d1d;
     --tc: #dbdbdb;
     --tch: #fff;    
     img:not(.ignoreTheme){

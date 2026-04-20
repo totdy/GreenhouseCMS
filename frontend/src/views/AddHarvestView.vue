@@ -44,9 +44,10 @@ async function handleSubmit() {
 </script>
 
 <template>
-    <form @submit.prevent="handleSubmit">
-        <button type="button" @click="addRow">+ Add Row</button>
+    <button type="button" @click="addRow">+ Add Row</button>
 
+    <form @submit.prevent="handleSubmit">
+        
         <div v-for="(row, index) in rows" :key="index" class="rows">
             <div>
                 <label>Day</label>
@@ -106,6 +107,10 @@ form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+
+    background-color: var(--bg1);
+    padding: 1rem;
+    border-radius: 0.5rem;
 }
 
 .rows {
@@ -113,9 +118,6 @@ form {
     grid-template-columns: repeat(4, 1fr) ;
     gap: 0.5rem;
 
-    background-color: var(--bg1);
-    padding: 1rem;
-    border-radius: 0.5rem;
 
     position: relative;
 
@@ -135,14 +137,20 @@ form {
         }
     }
 }
+button{
+    background-color: var(--bg1);
+
+    padding: 0.5rem 1rem;
+
+    &[type=submit]{
+        border: 0.2rem solid var(--bg2);
+    }
+}
 .remove{
     align-self: end;
 
     width: -webkit-fill-available;
 
-    background-color: rgb(255, 134, 134);
-    color: red;
-
-    padding: 0.4rem 0.6rem;
+    background-color: rgb(207, 207, 207);  
 }
 </style>

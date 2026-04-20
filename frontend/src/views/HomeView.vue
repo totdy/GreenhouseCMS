@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import Chart from 'chart.js/auto';
-import { onMounted, ref } from 'vue';
+import Chart from "chart.js/auto";
+import { onMounted, ref } from "vue";
+import { GetRevenueByDate } from "@/scripts/api"
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
 onMounted(async () => {
     if (!canvasRef.value) return;
 
-    const res = await fetch('http://localhost:8000/harvests/revenue-by-date');
-    const json = await res.json();
-    const data: { date: string; revenue: number }[] = json.data;
+    const resp = await GetRevenueByDate();
+    const data: { date: string; revenue: number }[] = resp.data;
 
     new Chart(canvasRef.value, {
         type: 'line',
