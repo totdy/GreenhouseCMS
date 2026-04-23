@@ -38,6 +38,10 @@ button{
     border: none;
     border-radius: 0.5rem !important;
 
+    &[type=submit]{
+        border: 0.2rem solid var(--bg2);
+    }
+
     &:hover {        
         color: var(--tch) !important;
         background-color: var(--bg2) !important;                            

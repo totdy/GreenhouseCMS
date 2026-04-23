@@ -45,7 +45,10 @@ onMounted(async () => {
 
 <style scoped>
 div{
-    
+    background-color: var(--bg1);
+
+    border-radius: 0.5rem;
+
     width: -webkit-fill-available;
 }
 </style>

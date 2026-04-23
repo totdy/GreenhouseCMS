@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import type { HarvestItem } from "@/scripts/types"
 import { addHarvests } from "@/scripts/api"
 
@@ -7,8 +7,14 @@ const isLoading = ref(false)
 const error = ref<string | null>(null)
 const successMsg = ref<string | null>(null)
 
+const globalDate = ref(new Date().toISOString().split("T")[0] || "")
+
+watch(globalDate, (newDate) => {
+    rows.value.forEach(row => row.date = newDate)
+})
+
 const createEmptyRow = (): HarvestItem => ({
-    date: new Date().toISOString().split("T")[0] || "",
+    date: globalDate.value,
     plant_type: "",
     plant_subtype: "",
     count: 0,
@@ -42,24 +48,34 @@ async function handleSubmit() {
     }
 }
 </script>
-
 <template>
     <button type="button" @click="addRow">+ Add Row</button>
 
     <form @submit.prevent="handleSubmit">
-        
+        <div class="gDate">
+            <label>Date</label>
+            <input type="date" v-model="globalDate" required />
+        </div>
         <div v-for="(row, index) in rows" :key="index" class="rows">
-            <div>
-                <label>Day</label>
-                <input v-model="row.date" type="date" required />
-            </div>
+            <input v-model="row.date" type="date" required hidden />
             <div>
                 <label>Type</label>
-                <input v-model="row.plant_type" placeholder="Tomato" required />
+                <select v-model.lazy="row.plant_type" required>
+                    <option value="" selected disabled></option>
+                    <option value="Tomato">🍅</option>
+                    <option value="Cucumber">🥒</option>
+                    <option value="Bell pepper">🫑</option>
+                    <option value="Garlic">🧄</option>
+                    <option value="Onion">🧅</option>
+                    <option value="Eggplant">🍆</option>
+                </select>
             </div>
             <div>
                 <label>Subtype</label>
-                <input v-model="row.plant_subtype" placeholder="Cherry" />
+                <select v-model.lazy="row.plant_subtype">
+                    <option value="" selected></option>
+                    <option value="Cherry">🍒</option>
+                </select>
             </div>
             <div>
                 <label>Count</label>
@@ -67,7 +83,7 @@ async function handleSubmit() {
             </div>
             <div>
                 <label>Unit</label>
-                <select v-model="row.count_unit" required>
+                <select v-model.lazy="row.count_unit" required>
                     <option disabled value="">Unit</option>
                     <option value="kg">kgs</option>
                     <option value="box">boxes</option>
@@ -83,9 +99,9 @@ async function handleSubmit() {
                 <textarea v-model="row.note" placeholder="Note" rows="1" />
             </div>
             <button class="remove" type="button" @click="removeRow(index)">x Remove</button>
-        </div>        
+        </div>
 
-        <button type="submit" :disabled="isLoading || rows.length === 0 ">
+        <button type="submit" :disabled="isLoading || rows.length === 0">
             {{ isLoading ? "Saving..." : "Submit All" }}
         </button>
 
@@ -113,29 +129,29 @@ form {
     border-radius: 0.5rem;
 }
 
+.gDate,
+.rows div {
+    display: flex;
+    flex-direction: column;
+
+    input,
+    select,
+    textarea {
+        border: none;
+        border-radius: 0.5rem;
+
+        padding: 0.5rem;
+
+        height: 2rem;
+
+        background-color: var(--bg2);
+    }
+}
+
 .rows {
     display: grid;
-    grid-template-columns: repeat(4, 1fr) ;
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
-
-
-    position: relative;
-
-    div {
-        display: flex;
-        flex-direction: column;        
-
-        input, select, textarea {
-            border: none;
-            border-radius: 0.5rem;
-
-            padding: 0.5rem;
-
-            height: 2rem;
-            
-            background-color: var(--bg2);
-        }
-    }
 }
 
 @media (max-width: 900px) {
@@ -144,21 +160,17 @@ form {
     }
 }
 
-button{
+button {
     background-color: var(--bg1);
 
     padding: 0.5rem 1rem;
-
-    &[type=submit]{
-        border: 0.2rem solid var(--bg2);
-    }
 }
-.remove{
+
+.remove {
     align-self: end;
 
     width: -webkit-fill-available;
 
     background-color: rgb(207, 207, 207);
 }
-
 </style>
