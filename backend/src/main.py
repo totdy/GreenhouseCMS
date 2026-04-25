@@ -1,5 +1,7 @@
 from contextlib import asynccontextmanager
 
+from datetime import datetime
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -32,9 +34,9 @@ app.add_middleware(
 def GetMyHarvests():
     return {"data": GetHarvests()}
 
-@app.get("/harvests/revenue-by-date")
-def GetHarvestRevenueByDate():
-    rows = GetRevenueByDate()
+@app.get("/harvests/revenue-by-date/{year}")
+def GetHarvestRevenueByDate(year: int):
+    rows = GetRevenueByDate(year=year)
     return {"data": [RevenueByDateItem(date=row.date, revenue=row.revenue) for row in rows]}
 
 @app.post("/harvests")

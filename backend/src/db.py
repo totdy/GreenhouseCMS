@@ -54,13 +54,14 @@ def UpdateHarvestData(id: int, payload: HarvestItem) -> None:
         new_session.execute(update_entry)
         new_session.commit()
 
-def GetRevenueByDate() -> list[RevenueByDateItem]:
+def GetRevenueByDate(year: int) -> list[RevenueByDateItem]:
     with session() as new_session:
         query = (
             select(
                 Harvests.date,
                 func.round(func.sum(Harvests.count * Harvests.unit_price), 2).label("revenue"),
             )
+            .filter(Harvests.date.between(f"{year}-01-01", f"{year}-12-31"))
             .group_by(Harvests.date)
             .order_by(Harvests.date)
         )
