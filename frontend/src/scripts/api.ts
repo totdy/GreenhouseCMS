@@ -1,6 +1,6 @@
 import type { HarvestPayload } from "@/scripts/types"
 
-const BASE_URL = "http://192.168.1.69:8000"
+const BASE_URL = "http://localhost:8000"
 
 export async function addHarvests(payload: HarvestPayload) {
     const response = await fetch(`${BASE_URL}/harvests`, {
@@ -13,8 +13,8 @@ export async function addHarvests(payload: HarvestPayload) {
     return response.json()
 }
 
-export async function GetRevenueByDate() {
-    const response = await fetch(`${BASE_URL}/harvests/revenue-by-date`);
+export async function GetRevenueByDate(chartYear: number) {
+    const response = await fetch(`${BASE_URL}/harvests/revenue-by-date/${chartYear}`);
     
     if (!response.ok) throw new Error(`Error: ${response.statusText}`)
     return response.json()
