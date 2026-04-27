@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView } from "vue-router"
 import ThemeToggle from "./components/ThemeToggle.vue";
+
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 </script>
 
 <template>
   <main>
     <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/add">Add</RouterLink>
-      <ThemeToggle />
+      <RouterLink to="/">{{ t("navbar.home") }}</RouterLink>
+      <RouterLink to="/add">{{ t("navbar.add") }}</RouterLink>
+      <ThemeToggle class="end" />
     </nav>
     <RouterView />
   </main>
@@ -20,9 +24,15 @@ nav {
   flex-direction: row;
   gap: 1rem;
   align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
 
   a {
     padding: 0.5rem 1rem;
+  }
+
+  .end {
+    justify-self: flex-end;
   }
 }
 

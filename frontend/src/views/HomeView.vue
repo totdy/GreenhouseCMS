@@ -3,6 +3,9 @@ import Chart from "chart.js/auto";
 import { nextTick, onMounted, ref, watch } from "vue";
 import { GetRevenueByDate } from "@/scripts/api";
 
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
 let chart: Chart | null = null;
@@ -16,7 +19,7 @@ function initChart() {
     if (!canvasRef.value) return;
 
     chart?.destroy();
-    chart = null;
+    chart = null;   
 
     chart = new Chart(canvasRef.value, {
         type: "line",
@@ -24,7 +27,7 @@ function initChart() {
             labels: [...MONTH_LABELS],
             datasets: [
                 {
-                    label: "Revenue",
+                    label: t("home.chart.title"),
                     data: [...ZERO_DATA],
                     borderColor: "#4caf82",
                     backgroundColor: "rgba(76, 175, 130, 0.1)",
@@ -37,8 +40,8 @@ function initChart() {
             responsive: true,
             animation: { duration: 600, easing: "easeInOutQuart" },
             scales: {
-                x: { title: { display: true, text: "Date" } },
-                y: { title: { display: true, text: "Revenue" }, beginAtZero: true },
+                x: { title: { display: true, text: t("home.chart.xAxis") } },
+                y: { title: { display: true, text: t("home.chart.yAxis") }, beginAtZero: true },
             },
         },
     });
@@ -83,7 +86,7 @@ onMounted(() => {
 <template>
     <div>
         <div>
-            <label>Year:</label>
+            <label>🗓️:</label>
             <select v-model="chartYear">
                 <option
                     v-for="year in [2023, 2024, 2025, 2026].sort((a, b) => b - a)"

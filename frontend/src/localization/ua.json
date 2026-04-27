@@ -1,0 +1,54 @@
+{
+    "navbar": {
+        "home": "Home",
+        "add": "Add"
+    },
+    "home": {
+        "chart": {
+            "title": "Revenue by date",
+            "yAxis": "Revenue, €",
+            "xAxis": "Date"
+        }
+    },
+    "addHarvest":{        
+        "date" : {
+            "title": "Date"
+        },
+        "type" : {
+            "title": "Тип",
+            "tomato": "Томат",
+            "cucumber": "Огірок",
+            "bellPepper": "Перець болг",
+            "garlic": "Часник",
+            "dill": "Укроп",
+            "onion": "Цибуля",
+            "parsley": "Петрушка",
+            "eggplant": "Баклажан",
+            "lovage": "Любисток",
+            "sorrel": "Квасок",
+            "mint": "Мята",
+            "radish": "Редис",
+            "coriander": "Коріандр",
+            "basil": "Базилік"
+        },
+        "subtype" : {
+            "title": "Subtype"
+        },
+        "count" : {
+            "title": "Count"
+        },
+        "price" : {
+            "title": "Price"
+        },
+        "note" : {
+            "title": "Note"
+        },
+        "remove" : {
+            "title": "Remove"
+        },
+        "unit": {
+            "title": "Unit"
+        },        
+        "successMsg": "Inserted {rows} row(s) successfully!"
+    }
+}

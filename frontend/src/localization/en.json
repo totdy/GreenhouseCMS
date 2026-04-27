@@ -1,0 +1,54 @@
+{
+    "navbar": {
+        "home": "Home",
+        "add": "Add"
+    },
+    "home": {
+        "chart": {
+            "title": "Revenue by date",
+            "yAxis": "Revenue, €",
+            "xAxis": "Date"
+        }
+    },
+    "addHarvest":{        
+        "date" : {
+            "title": "Date"
+        },
+        "type" : {
+            "title": "Type",
+            "tomato": "Tomato",
+            "cucumber": "Cucumber",
+            "bellPepper": "Bell pepper",
+            "garlic": "Garlic",
+            "dill": "Dill",
+            "onion": "Onion",
+            "parsley": "Parsley",
+            "eggplant": "Eggplant",
+            "lovage": "Lovage",
+            "sorrel": "Sorrel",
+            "mint": "Mint",
+            "radish": "Radish",
+            "coriander": "Coriander",
+            "basil": "Basil"
+        },
+        "subtype" : {
+            "title": "Subtype"
+        },
+        "count" : {
+            "title": "Count"
+        },
+        "price" : {
+            "title": "Price"
+        },
+        "note" : {
+            "title": "Note"
+        },
+        "remove" : {
+            "title": "Remove"
+        },
+        "unit": {
+            "title": "Unit"
+        },        
+        "successMsg": "Inserted {rows} row(s) successfully!"
+    }
+}
