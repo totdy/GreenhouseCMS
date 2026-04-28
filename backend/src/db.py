@@ -27,11 +27,9 @@ def AddHarvestData(payload: HarvestPayload) -> None:
             new_entry = Harvests(
                 date = item.date,
                 plant_type = item.plant_type,
-                plant_subtype = item.plant_subtype,
                 count = item.count,
                 count_unit = item.count_unit,
                 unit_price = item.unit_price,
-                note = item.note,
             )
             new_session.add(new_entry)
         new_session.commit()
@@ -44,11 +42,9 @@ def UpdateHarvestData(id: int, payload: HarvestItem) -> None:
             .values(
                 date = payload.date,
                 plant_type = payload.plant_type,
-                plant_subtype = payload.plant_subtype,
                 count = payload.count,
                 count_unit = payload.count_unit,
                 unit_price = payload.unit_price,
-                note = payload.note,
             )
         )
         new_session.execute(update_entry)

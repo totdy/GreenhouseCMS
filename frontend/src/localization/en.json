@@ -47,7 +47,10 @@
             "title": "Remove"
         },
         "unit": {
-            "title": "Unit"
+            "title": "Unit",
+            "kg": "kgs",
+            "box": "boxes",
+            "bunch": "bunches"
         },        
         "successMsg": "Inserted {rows} row(s) successfully!"
     }

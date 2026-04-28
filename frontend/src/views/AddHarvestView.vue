@@ -19,11 +19,9 @@ watch(globalDate, (newDate) => {
 const createEmptyRow = (): HarvestItem => ({
     date: globalDate.value,
     plant_type: "",
-    plant_subtype: "",
     count: 0,
     count_unit: "",
     unit_price: 0,
-    note: "",
 })
 
 const rows = ref<HarvestItem[]>([createEmptyRow()])
@@ -80,14 +78,7 @@ async function handleSubmit() {
                     <option value="Coriander">🌿 {{ t("addHarvest.type.coriander") }}</option>
                     <option value="Basil">💐 {{ t("addHarvest.type.basil") }}</option>                    
                 </select>
-            </div>
-            <div style="display: none;">
-                <label>Subtype</label>
-                <select v-model.lazy="row.plant_subtype">
-                    <option value="" selected></option>
-                    <option value="Cherry">🍒</option>
-                </select>
-            </div>
+            </div>            
             <div>
                 <label>{{t("addHarvest.count.title")}}</label>
                 <input v-model.number="row.count" type="number" step="0.1" min="0" required />
@@ -96,19 +87,15 @@ async function handleSubmit() {
                 <label>{{t("addHarvest.unit.title")}}</label>
                 <select v-model.lazy="row.count_unit" required>
                     <option disabled value="">{{t("addHarvest.unit.title")}}</option>
-                    <option value="kg">⚫kgs</option>
-                    <option value="box">📦boxes</option>
-                    <option value="bunch">💐bunches</option>
+                    <option value="kg">⚫ {{t("addHarvest.unit.kg")}}</option>
+                    <option value="box">📦 {{t("addHarvest.unit.box")}}</option>
+                    <option value="bunch">💐 {{t("addHarvest.unit.bunch")}}</option>
                 </select>
             </div>
             <div>
                 <label>{{t("addHarvest.price.title")}}</label>
                 <input v-model.number="row.unit_price" type="number" step="0.05" min="0" required />
-            </div>
-            <div style="display: none;">
-                <label>{{t("addHarvest.note.title")}}</label>
-                <textarea v-model="row.note" placeholder="Note" rows="1" />
-            </div>
+            </div>            
             <div>
                 <label>{{t("addHarvest.remove.title")}}</label>
                 <button class="remove" type="button" @click="removeRow(index)">❌</button>
@@ -173,10 +160,8 @@ form {
     display: grid;
     grid-template-columns: repeat(4, 1fr) 4rem;
     gap: 0.5rem;
-}
 
-@media (max-width: 900px) {
-    .rows {
+    @media (max-width: 750px) {
         grid-template-columns: 1fr;
     }
 }
