@@ -89,7 +89,7 @@ onMounted(() => {
             <label>🗓️:</label>
             <select v-model="chartYear">
                 <option
-                    v-for="year in [2023, 2024, 2025, 2026].sort((a, b) => b - a)"
+                    v-for="year in [2026].sort((a, b) => b - a)"
                     :key="year"
                     :value="year"
                 >
@@ -101,7 +101,7 @@ onMounted(() => {
     </div>
 </template>
 
-<style scoped>
+<style lang="css" scoped>
 div {
     background-color: var(--bg1);
     border-radius: 0.5rem;

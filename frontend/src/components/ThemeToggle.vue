@@ -30,12 +30,9 @@ function ToggleTheme() {
 <style scoped lang="css">
 button {
     padding: 0.3rem 0.3rem 0.1rem 0.3rem;
-}
-
-@media print {
-    button {
+    
+    @media print {
         display: none;
     }
 }
-
 </style>

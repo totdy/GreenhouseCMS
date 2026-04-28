@@ -1,18 +1,22 @@
 {
     "navbar": {
-        "home": "Home",
-        "add": "Add"
+        "home": "Головна",
+        "add": "Додати"
     },
     "home": {
         "chart": {
-            "title": "Revenue by date",
-            "yAxis": "Revenue, €",
-            "xAxis": "Date"
+            "title": "Дохід за датою",
+            "yAxis": "Дохід, €",
+            "xAxis": "Дата"
         }
     },
-    "addHarvest":{        
+    "addHarvest":{
+        "btn": {
+            "add": "Додати ряд",
+            "submit": "Надіслати всі"
+        },     
         "date" : {
-            "title": "Date"
+            "title": "Дата збору врожаю"
         },
         "type" : {
             "title": "Тип",
@@ -31,27 +35,24 @@
             "coriander": "Коріандр",
             "basil": "Базилік"
         },
-        "subtype" : {
-            "title": "Subtype"
-        },
         "count" : {
-            "title": "Count"
+            "title": "Кількість"
         },
         "price" : {
-            "title": "Price"
-        },
-        "note" : {
-            "title": "Note"
+            "title": "Ціна"
         },
         "remove" : {
-            "title": "Remove"
+            "title": "Видалити"
         },
         "unit": {
-            "title": "Unit",
-            "kg": "kgs",
-            "box": "boxes",
-            "bunch": "bunches"
+            "title": "Одиниця",
+            "kg": "кг",
+            "box": "ящики",
+            "bunch": "пучки"
         },
-        "successMsg": "Inserted {rows} row(s) successfully!"
+        "msg": {
+            "saving": "Збереження",
+            "success": "Успішно додано {rows} рядків!"
+        }
     }
 }

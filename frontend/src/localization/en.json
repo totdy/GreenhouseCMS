@@ -10,9 +10,13 @@
             "xAxis": "Date"
         }
     },
-    "addHarvest":{        
+    "addHarvest":{
+        "btn": {
+            "add": "Add Row",
+            "submit": "Submit All"
+        },
         "date" : {
-            "title": "Date"
+            "title": "Date of harvest"
         },
         "type" : {
             "title": "Type",
@@ -31,17 +35,11 @@
             "coriander": "Coriander",
             "basil": "Basil"
         },
-        "subtype" : {
-            "title": "Subtype"
-        },
         "count" : {
             "title": "Count"
         },
         "price" : {
             "title": "Price"
-        },
-        "note" : {
-            "title": "Note"
         },
         "remove" : {
             "title": "Remove"
@@ -52,6 +50,9 @@
             "box": "boxes",
             "bunch": "bunches"
         },        
-        "successMsg": "Inserted {rows} row(s) successfully!"
+        "msg": {
+            "saving": "Saving",
+            "success": "Successfully added {rows} row(s)!"
+        }
     }
 }

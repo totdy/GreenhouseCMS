@@ -41,7 +41,7 @@ async function handleSubmit() {
 
     try {
         const result = await addHarvests({ data: rows.value })
-        successMsg.value = t("addHarvest.successMsg", { rows: result.data })
+        successMsg.value = t("addHarvest.msg.success", { rows: result.data })
     } catch (err: any) {
         error.value = err.message
     } finally {
@@ -50,7 +50,7 @@ async function handleSubmit() {
 }
 </script>
 <template>
-    <button type="button" @click="addRow">+ Add Row</button>
+    <button type="button" @click="addRow">➕ {{t("addHarvest.btn.add")}}</button>
 
     <form @submit.prevent="handleSubmit">
         <div class="gDate">
@@ -103,7 +103,7 @@ async function handleSubmit() {
         </div>
 
         <button type="submit" :disabled="isLoading || rows.length === 0">
-            {{ isLoading ? "Saving..." : "Submit All" }}
+            {{ isLoading ? t("addHarvest.msg.saving") + "..." : t("addHarvest.btn.submit") }}
         </button>
 
         <p v-if="successMsg" class="success">{{ successMsg }}</p>
