@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router"
 import ThemeToggle from "./components/ThemeToggle.vue";
+import LocalizationSelect from "./components/LocalizationSelect.vue";
 
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
@@ -8,14 +9,19 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <main>
+  <header>
     <nav>
       <RouterLink to="/">{{ t("navbar.home") }}</RouterLink>
       <RouterLink to="/add">{{ t("navbar.add") }}</RouterLink>
-      <ThemeToggle class="end" />
+      <ThemeToggle />
     </nav>
+  </header>
+  <main>
     <RouterView />
   </main>
+  <footer>
+    <LocalizationSelect />
+  </footer>
 </template>
 
 <style lang="css" scoped>
@@ -31,16 +37,25 @@ nav {
     padding: 0.5rem 1rem;
   }
 
-  .end {
-    justify-self: flex-end;
+  :last-child {
+    margin-left: auto;
   }
 }
 
-main {
+main,
+header,
+footer {
   max-width: 60rem;
   width: 100%;
+}
+
+main {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+footer {
+  margin-top: auto;
 }
 </style>

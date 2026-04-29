@@ -9,10 +9,11 @@
     --bg1: #031d05;
     --bg2: #194d1d;
     --tc: #dbdbdb;
-    --tch: #fff;    
-    img:not(.ignoreTheme){
+    --tch: #fff;
+
+    img:not(.ignoreTheme) {
         filter: invert(1);
-        background:transparent !important;
+        background: transparent !important;
     }
 }
 
@@ -26,48 +27,54 @@
 }
 
 a,
-button{
+button {
     display: block;
-    
+
     height: fit-content;
     width: fit-content;
-    
+
     cursor: pointer;
     background: transparent;
-    
+
     border: none;
     border-radius: 0.5rem !important;
 
-    &[type=submit]{
+    &[type=submit] {
         border: 0.2rem solid var(--bg2);
     }
 
-    &:hover {        
+    &:hover {
         color: var(--tch) !important;
-        background-color: var(--bg2) !important;                            
+        background-color: var(--bg2) !important;
     }
 }
 
-h1{
+h1 {
     font-size: 2em;
 }
-h2{
+
+h2 {
     font-size: 1.5em;
 }
-h3{
+
+h3 {
     font-size: 1.17em;
 }
 
-#app {    
+#app {
     background-image: linear-gradient(45deg, var(--bg1), var(--bg2), var(--bg1));
     
     padding: 1rem;
     
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 1rem;
     
     min-height: 100vh;
     min-height: 100svh;
-
-    position: relative;
+    
+    position: relative;    
 }
