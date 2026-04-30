@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, select, update, func
 from sqlalchemy.orm import sessionmaker
 
-from src.schemas import HarvestPayload, HarvestItem, RevenueByDateItem
+from src.schemas import HarvestPayload, HarvestIn, RevenueByDateItem, ActivityItem, HarvestOut
 
 from src.models import Harvests
 
@@ -9,19 +9,13 @@ engine = create_engine(url="sqlite:///greenhouse.db")
 
 session = sessionmaker(engine)
 
-def GetHarvests() -> list[Harvests]:
-    with session() as new_session:
-        query = select(Harvests)
-        result = new_session.execute(query)
-        return result.scalars().all() # type: ignore
-    
-def GetHarvestById(id: int) -> Harvests | None:
+def GetHarvest(id: int) -> Harvests | None:
     with session() as new_session:
         query = select(Harvests).filter_by(id = id)
         result = new_session.execute(query)
         return result.scalars().first() # type: ignore
 
-def AddHarvestData(payload: HarvestPayload) -> None:
+def AddHarvest(payload: HarvestPayload) -> None:
     with session() as new_session:
         for item in payload.data:
             new_entry = Harvests(
@@ -34,7 +28,7 @@ def AddHarvestData(payload: HarvestPayload) -> None:
             new_session.add(new_entry)
         new_session.commit()
     
-def UpdateHarvestData(id: int, payload: HarvestItem) -> None:
+def UpdateHarvest(id: int, payload: HarvestIn) -> None:
     with session() as new_session:
         update_entry = (
             update(Harvests)
@@ -63,3 +57,27 @@ def GetRevenueByDate(year: int) -> list[RevenueByDateItem]:
         )
         result = new_session.execute(query)
         return result.all() # type: ignore
+
+def GetActivityByYear(year: int) -> list[ActivityItem]:
+    with session() as new_session:
+        query = (
+            select(
+                Harvests.date,
+                func.count(Harvests.id).label("count"),
+            )
+            .filter(Harvests.date.between(f"{year}-01-01", f"{year}-12-31"))
+            .group_by(Harvests.date)
+            .order_by(Harvests.date)
+        )
+        result = new_session.execute(query)
+        return result.all() # type: ignore
+
+def GetRecentActivity(limit: int = 10) -> list[HarvestOut]:
+    with session() as new_session:
+        query = (
+            select(Harvests)
+            .order_by(Harvests.created_at.desc())
+            .limit(limit)
+        )
+        result = new_session.execute(query)
+        return result.scalars().all() # type: ignore

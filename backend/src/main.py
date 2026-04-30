@@ -6,16 +6,15 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from src.db import AddHarvestData, UpdateHarvestData, GetHarvests, GetHarvestById, GetRevenueByDate, engine
+from src.db import AddHarvest, UpdateHarvest, GetHarvest, GetRevenueByDate, engine, GetActivityByYear, GetRecentActivity
 from src.models import Base
 
-from src.schemas import HarvestPayload, HarvestItem, RevenueByDateItem
+from src.schemas import HarvestPayload, HarvestIn, ActivityResponse, RecentActivityResponse, RevenueByDateResponse
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(engine)
     yield
-
 
 app = FastAPI(
     title="GreenhouseCMS",
@@ -30,27 +29,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/harvests")
-def GetMyHarvests():
-    return {"data": GetHarvests()}
-
-@app.get("/harvests/revenue-by-date/{year}")
-def GetHarvestRevenueByDate(year: int):
-    rows = GetRevenueByDate(year=year)
-    return {"data": [RevenueByDateItem(date=row.date, revenue=row.revenue) for row in rows]}
-
 @app.post("/harvests")
 def AddNewHarvests(payload: HarvestPayload):
-    AddHarvestData(payload)
+    AddHarvest(payload)
     return {"success": True, "inserted": len(payload.data)}
 
 @app.put("/harvests/{id}")
-def UpdateMyHarvest(id: int, payload: HarvestItem):
-    if not GetHarvestById(id):
+def UpdateOneHarvest(id: int, payload: HarvestIn):
+    if not GetHarvest(id):
         raise HTTPException(status_code=404, detail="Harvest not found")
     
-    UpdateHarvestData(id, payload)
+    UpdateHarvest(id, payload)
     return {"success": True}
+
+@app.get("/harvests/revenue-by-date/{year}", response_model=RevenueByDateResponse)
+def GetHarvestRevenueByDate(year: int):    
+    return {"data": GetRevenueByDate(year=year)}
+
+@app.get("/harvests/activity/{year}", response_model=ActivityResponse)
+def GetHarvestActivity(year: int):
+    return {"data": GetActivityByYear(year=year)}
+
+@app.get("/harvests/recent", response_model=RecentActivityResponse)
+def GetLastActivity(limit: int = 10):
+    return {"data": GetRecentActivity(limit=min(limit, 50))}
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, log_level="info")
