@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router"
-import ThemeToggle from "./components/ThemeToggle.vue";
-import LocalizationSelect from "./components/LocalizationSelect.vue";
+import ThemeToggle from "@/components/ThemeToggle.vue";
+import LocalizationSelect from "@/components/LocalizationSelect.vue";
 
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
@@ -13,6 +13,7 @@ const { t } = useI18n()
     <nav>
       <RouterLink to="/">{{ t("navbar.home") }}</RouterLink>
       <RouterLink to="/add">{{ t("navbar.add") }}</RouterLink>
+      <RouterLink to="/charts">{{ t("navbar.charts") }}</RouterLink>
       <ThemeToggle />
     </nav>
   </header>
