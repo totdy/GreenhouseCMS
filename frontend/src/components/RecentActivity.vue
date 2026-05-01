@@ -1,31 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
-import { GetRecentActivity } from "@/scripts/api"
 import type { RecentActivityItem } from "@/scripts/types"
+
+import { useRecentActivity } from "@/scripts/useRecentActivity"
 
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
-
-const recentActivity = ref<RecentActivityItem[]>([])
-const loadingRecent = ref(true)
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("default", { day: "numeric", month: "short", year: "numeric" })
 }
 
-async function loadRecent() {
-  loadingRecent.value = true
-  try {
-    const res = await GetRecentActivity(10)
-    recentActivity.value = res.data
-  } finally {
-    loadingRecent.value = false
-  }
-}
+const { recentActivity, loadingRecent, loadRecent } = useRecentActivity()
 
-onMounted(() => {
-  loadRecent()
-})
+onMounted(() => loadRecent())
 
 </script>
 

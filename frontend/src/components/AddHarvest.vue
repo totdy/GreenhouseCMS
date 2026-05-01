@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, watch } from "vue"
+import { nextTick, ref, watch } from "vue"
 import type { HarvestItem } from "@/scripts/types"
 import { addHarvests } from "@/scripts/api"
+import { useRecentActivity } from "@/scripts/useRecentActivity"
 
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
@@ -15,6 +16,8 @@ const globalDate = ref(new Date().toISOString().split("T")[0] || "")
 watch(globalDate, (newDate) => {
     rows.value.forEach(row => row.date = newDate)
 })
+
+const { loadRecent } = useRecentActivity()
 
 const createEmptyRow = (): HarvestItem => ({
     date: globalDate.value,
@@ -41,7 +44,11 @@ async function handleSubmit() {
 
     try {
         const result = await addHarvests({ data: rows.value })
-        successMsg.value = t("addHarvest.msg.success", { rows: result.data })
+        
+        successMsg.value = t("addHarvest.msg.success", { rows: result.inserted })
+        setTimeout(() => successMsg.value = null, 3000)
+
+        await loadRecent()
     } catch (err: any) {
         error.value = err.message
     } finally {
