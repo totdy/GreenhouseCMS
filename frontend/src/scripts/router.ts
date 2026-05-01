@@ -13,12 +13,7 @@ const router = createRouter({
       path: "/add",
       name: "add",
       component: () => import("@/views/AddHarvestView.vue"),
-    },
-    {
-      path: "/charts",
-      name: "charts",
-      component: () => import("@/views/ChartsView.vue"),
-    },
+    }
   ],
 })
 

@@ -26,6 +26,14 @@
     color: var(--tc);
 }
 
+ul,
+ol {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
 a,
 button {
     display: block;
@@ -54,27 +62,39 @@ h1 {
 }
 
 h2 {
-    font-size: 1.5em;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--tc);
 }
 
 h3 {
     font-size: 1.17em;
 }
 
+section {
+    background: var(--bg1);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
 #app {
     background-image: linear-gradient(45deg, var(--bg1), var(--bg2), var(--bg1));
-    
+
     padding: 1rem;
-    
+
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: center;
     gap: 1rem;
-    
+
     min-height: 100vh;
     min-height: 100svh;
-    
-    position: relative;    
+
+    position: relative;
 }

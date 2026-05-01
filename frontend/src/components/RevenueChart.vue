@@ -2,6 +2,7 @@
 import Chart from "chart.js/auto";
 import { nextTick, onMounted, ref, watch } from "vue";
 import { GetRevenueByDate } from "@/scripts/api";
+import type { RevenueByDateItem } from "@/scripts/types";
 
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
@@ -64,7 +65,7 @@ async function loadChartData(resetFirst = true) {
 
     try {
         const resp = await GetRevenueByDate(chartYear.value);
-        const data: { date: string; revenue: number }[] = resp?.data ?? [];
+        const data: RevenueByDateItem[] = resp?.data ?? [];
         if (!data.length) return;
         await setChartData(
             data.map((row) => row.date),
@@ -84,7 +85,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div>
+    <section>
         <div>
             <label>🗓️:</label>
             <select v-model="chartYear">
@@ -98,7 +99,7 @@ onMounted(() => {
             </select>
         </div>
         <canvas ref="canvasRef"></canvas>
-    </div>
+    </section>
 </template>
 
 <style lang="css" scoped>

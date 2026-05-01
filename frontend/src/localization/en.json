@@ -1,17 +1,21 @@
 {
     "navbar": {
         "home": "Home",
-        "add": "Add",
-        "charts": "Charts"
+        "add": "Add"
     },
     "home": {
         "chart": {
             "title": "Revenue by date",
             "yAxis": "Revenue, €",
             "xAxis": "Date"
+        },
+        "recentActivity": {
+            "title": "Recent Activity",
+            "empty": "No recent activity"
         }
     },
     "addHarvest":{
+        "title": "Add Harvest",
         "btn": {
             "add": "Add Row",
             "submit": "Submit All"
@@ -21,20 +25,20 @@
         },
         "type" : {
             "title": "Type",
-            "tomato": "Tomato",
-            "cucumber": "Cucumber",
-            "bellPepper": "Bell pepper",
-            "garlic": "Garlic",
-            "dill": "Dill",
-            "onion": "Onion",
-            "parsley": "Parsley",
-            "eggplant": "Eggplant",
-            "lovage": "Lovage",
-            "sorrel": "Sorrel",
-            "mint": "Mint",
-            "radish": "Radish",
-            "coriander": "Coriander",
-            "basil": "Basil"
+            "tomato": "🍅 Tomato",
+            "cucumber": "🥒 Cucumber",
+            "bellpepper": "🫑 Bell pepper",
+            "garlic": "🧄 Garlic",
+            "dill": "🌿 Dill",
+            "onion": "🧅 Onion",
+            "parsley": "🌿 Parsley",
+            "eggplant": "🍆 Eggplant",
+            "lovage": "🌿 Lovage",
+            "sorrel": "🥬 Sorrel",
+            "mint": "🌿 Mint",
+            "radish": "🍎 Radish",
+            "coriander": "🌿 Coriander",
+            "basil": "💐 Basil"
         },
         "count" : {
             "title": "Count"
@@ -47,9 +51,9 @@
         },
         "unit": {
             "title": "Unit",
-            "kg": "kgs",
-            "box": "boxes",
-            "bunch": "bunches"
+            "kg": "⚫ kgs",
+            "box": "📦 boxes",
+            "bunch": "💐 bunches"
         },        
         "msg": {
             "saving": "Saving",
