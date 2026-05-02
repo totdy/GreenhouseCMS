@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
-import type { RecentActivityItem } from "@/scripts/types"
+import { onMounted } from "vue"
 
 import { useRecentActivity } from "@/scripts/useRecentActivity"
 
@@ -24,13 +23,13 @@ onMounted(() => loadRecent())
     <ul v-if="!loadingRecent && recentActivity.length">
       <li v-for="item in recentActivity" :key="item.id">
         <p>{{ t(`addHarvest.type.${item.plant_type.toLowerCase()}`) }}</p>
-        <p>{{ item.count }} {{t(`addHarvest.unit.${item.count_unit.toLowerCase()}`) }}</p>
+        <p>{{ item.count }} {{ t(`addHarvest.unit.${item.count_unit.toLowerCase()}`) }}</p>
         <p>€{{ item.unit_price.toFixed(2) }}/unit</p>
         <p>{{ formatDate(item.date) }}</p>
       </li>
     </ul>
 
-    <p class="empty" v-else>{{ t("home.recentActivity.empty") }}</p>
+    <h2 v-else>{{ t("home.recentActivity.empty") }}</h2>
   </section>
 </template>
 
@@ -40,18 +39,10 @@ li {
   grid-template-columns: 1fr 1fr 1fr auto;
   gap: 1rem;
   padding: 0.75rem 0;
-  border-bottom: 1px solid var(--bg2, #232b23);
+  border-bottom: 1px solid var(--border-muted);
 }
 
 li:last-child {
   border-bottom: none;
-}
-
-.empty {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
-  color: var(--tc);
-  text-align: center;
-  padding: 2rem 0;
 }
 </style>

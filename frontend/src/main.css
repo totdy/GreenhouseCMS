@@ -1,20 +1,49 @@
 :root[data-theme="light"] {
-    --bg1: #fff;
-    --bg2: #a9dbad;
-    --tc: #272727;
-    --tch: #000
+    --color: #a9dbad;
+
+    --bg-dark: hsl(82 53% 84%);
+    --bg: hsl(82 80% 89%);
+    --bg-light: hsl(82 100% 94%);
+    --text: hsl(91 100% 2%);
+    --text-muted: hsl(73 100% 11%);
+    --highlight: hsl(81 100% 88%);
+
+    --border: hsl(73 100% 11%);
+    --border-muted: hsl(75 100% 6%);    
+    
+    --primary: hsl(79 41% 57%);
+    --secondary: hsl(267 72% 78%);
+
+    --danger: hsl(8 63% 66%);
+    --warning: hsl(52 49% 46%);
+    --success: hsl(151 41% 51%);
+    --info: hsl(217 73% 68%);
 }
 
 :root[data-theme="dark"] {
-    --bg1: #031d05;
-    --bg2: #194d1d;
-    --tc: #dbdbdb;
-    --tch: #fff;
+    --color: #194d1d;
+    
+    --bg-dark: hsl(89 100% 1%);
+    --bg: hsl(86 100% 2%);
+    --bg-light: hsl(79 100% 4%);
+    --text: hsl(81 97% 85%);
+    --text-muted: hsl(80 35% 60%);
+    --highlight: hsl(75 83% 24%);
 
-    img:not(.ignoreTheme) {
-        filter: invert(1);
-        background: transparent !important;
-    }
+    --border: hsl(78 47% 37%);
+    --border-muted: hsl(79 35% 50%);
+    
+    --primary: hsl(73 100% 11%);
+    --secondary: hsl(269 41% 34%);
+
+    --danger: hsl(7 47% 42%);
+    --warning: hsl(53 100% 17%);
+    --success: hsl(161 100% 19%);
+    --info: hsl(217 50% 44%);
+}
+
+:root {
+    --hover: linear-gradient(0deg, var(--bg), var(--bg-light));
 }
 
 * {
@@ -23,7 +52,7 @@
     box-sizing: border-box;
     font-family: monospace, Inter, sans-serif;
     text-decoration: none;
-    color: var(--tc);
+    color: var(--text);
 }
 
 ul,
@@ -41,20 +70,37 @@ button {
     height: fit-content;
     width: fit-content;
 
+    padding: 0.5rem 1rem;
+
     cursor: pointer;
     background: transparent;
 
     border: none;
     border-radius: 0.5rem !important;
 
+    background-color: var(--primary);
+
     &[type=submit] {
-        border: 0.2rem solid var(--bg2);
+        background-color: var(--secondary);
     }
 
     &:hover {
-        color: var(--tch) !important;
-        background-color: var(--bg2) !important;
+        background-image: var(--hover) !important;
     }
+}
+
+input,
+select,
+textarea {
+    border: none;
+    border-radius: 0.5rem !important;
+
+    width: 100%;
+    height: 2rem;
+
+    padding: 0.5rem;
+
+    background-color: var(--bg-light);
 }
 
 h1 {
@@ -65,7 +111,7 @@ h2 {
     font-size: 1rem;
     font-weight: 600;
     margin: 0;
-    color: var(--tc);
+    color: var(--text);
 }
 
 h3 {
@@ -73,7 +119,7 @@ h3 {
 }
 
 section {
-    background: var(--bg1);
+    background: var(--bg);
     border-radius: 0.5rem;
     padding: 1rem;
     display: flex;
@@ -82,9 +128,9 @@ section {
 }
 
 #app {
-    background-image: linear-gradient(45deg, var(--bg1), var(--bg2), var(--bg1));
-
     padding: 1rem;
+
+    background-color: var(--bg-dark);
 
     display: flex;
     justify-content: flex-start;

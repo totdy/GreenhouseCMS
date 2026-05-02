@@ -17,8 +17,9 @@
     "addHarvest":{
         "title": "Add Harvest",
         "btn": {
-            "add": "Add Row",
-            "submit": "Submit All"
+            "add": "+ Add Row",
+            "submit": "↗ Submit All",
+            "remove" : "- Remove"
         },
         "date" : {
             "title": "Date of harvest"
@@ -45,9 +46,6 @@
         },
         "price" : {
             "title": "Price"
-        },
-        "remove" : {
-            "title": "Remove"
         },
         "unit": {
             "title": "Unit",

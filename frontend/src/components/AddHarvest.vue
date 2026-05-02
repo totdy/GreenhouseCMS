@@ -5,6 +5,7 @@ import { addHarvests } from "@/scripts/api"
 import { useRecentActivity } from "@/scripts/useRecentActivity"
 
 import { useI18n } from 'vue-i18n'
+import PopUp from "./PopUp.vue"
 const { t } = useI18n()
 
 const isLoading = ref(false)
@@ -44,9 +45,8 @@ async function handleSubmit() {
 
     try {
         const result = await addHarvests({ data: rows.value })
-        
-        successMsg.value = t("addHarvest.msg.success", { rows: result.inserted })
-        setTimeout(() => successMsg.value = null, 3000)
+
+        successMsg.value = t("addHarvest.msg.success", { rows: result.inserted })        
 
         await loadRecent()
     } catch (err: any) {
@@ -66,10 +66,16 @@ async function handleSubmit() {
         </div>
 
         <form @submit.prevent="handleSubmit">
+            <div class="rows">
+                <label>{{ t("addHarvest.type.title") }}</label>
+                <label>{{ t("addHarvest.count.title") }}</label>
+                <label>{{ t("addHarvest.unit.title") }}</label>
+                <label>{{ t("addHarvest.price.title") }}</label>
+                <label><button type="button" @click="addRow">{{ t("addHarvest.btn.add") }}</button></label>
+            </div>
             <div v-for="(row, index) in rows" :key="index" class="rows">
                 <input v-model="row.date" type="date" required hidden />
                 <div>
-                    <label>{{ t("addHarvest.type.title") }}</label>
                     <select v-model.lazy="row.plant_type" required>
                         <option value="" selected disabled></option>
                         <option value="Tomato">{{ t("addHarvest.type.tomato") }}</option>
@@ -89,11 +95,9 @@ async function handleSubmit() {
                     </select>
                 </div>
                 <div>
-                    <label>{{ t("addHarvest.count.title") }}</label>
                     <input v-model.number="row.count" type="number" step="0.1" min="0" required />
                 </div>
                 <div>
-                    <label>{{ t("addHarvest.unit.title") }}</label>
                     <select v-model.lazy="row.count_unit" required>
                         <option disabled value="">{{ t("addHarvest.unit.title") }}</option>
                         <option value="kg">{{ t("addHarvest.unit.kg") }}</option>
@@ -102,45 +106,32 @@ async function handleSubmit() {
                     </select>
                 </div>
                 <div>
-                    <label>{{ t("addHarvest.price.title") }}</label>
                     <input v-model.number="row.unit_price" type="number" step="0.05" min="0" required />
                 </div>
                 <div>
-                    <label>{{ t("addHarvest.remove.title") }}</label>
-                    <button class="remove" type="button" @click="removeRow(index)">❌</button>
+                    <button class="remove" type="button" @click="removeRow(index)">{{ t("addHarvest.btn.remove") }}</button>
                 </div>
             </div>
 
             <div class="btnsPanel">
                 <button type="submit" :disabled="isLoading || rows.length === 0">
                     {{ isLoading ? t("addHarvest.msg.saving") + "..." : t("addHarvest.btn.submit") }}
-                </button>
+                </button>                
+            </div>
 
-                <button type="button" @click="addRow">➕ {{ t("addHarvest.btn.add") }}</button>
-            </div>            
-
-            <p v-if="successMsg" class="success">{{ successMsg }}</p>
-            <p v-if="error" class="error">{{ error }}</p>
+            <PopUp v-if="successMsg" type="success" :msg="successMsg" @close="successMsg = null" />
+            <PopUp v-if="error" type="error" :msg="error" @close="error = null" />         
 
         </form>
     </section>
 </template>
 <style lang="css" scoped>
-.success {
-    color: green;
-}
-
-.error {
-    color: red;
-}
-
 form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
 }
 
-.btnsPanel{
+.btnsPanel {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -150,42 +141,25 @@ form {
 .rows div {
     display: flex;
     flex-direction: column;
+}
 
-    input,
-    select,
-    textarea {
-        border: none;
-        border-radius: 0.5rem;
+.remove {
+    width: -webkit-fill-available;
 
-        padding: 0.5rem;
-
-        height: 2rem;
-
-        width: 100%;
-
-        background-color: var(--bg2);
-    }
-
-    & .remove {
-        width: -webkit-fill-available;
-
-        background-color: rgb(255, 176, 176);
-    }
+    background-color: var(--danger);
 }
 
 .rows {
     display: grid;
-    grid-template-columns: repeat(4, 1fr) 4rem;
-    gap: 0.5rem;
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+    gap: 1rem;
+
+    border-bottom: 1px solid var(--bg2);
+
+    padding: 0.75rem 0;
 
     @media (max-width: 750px) {
         grid-template-columns: 1fr;
     }
-}
-
-button {
-    background-color: var(--bg2);
-
-    padding: 0.5rem;
 }
 </style>

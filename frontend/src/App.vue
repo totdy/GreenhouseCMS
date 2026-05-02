@@ -33,10 +33,6 @@ nav {
   justify-content: flex-start;
   flex-wrap: nowrap;
 
-  a {
-    padding: 0.5rem 1rem;
-  }
-
   :last-child {
     margin-left: auto;
   }
