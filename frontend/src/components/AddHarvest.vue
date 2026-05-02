@@ -112,12 +112,10 @@ async function handleSubmit() {
                     <button class="remove" type="button" @click="removeRow(index)">{{ t("addHarvest.btn.remove") }}</button>
                 </div>
             </div>
-
-            <div class="btnsPanel">
-                <button type="submit" :disabled="isLoading || rows.length === 0">
-                    {{ isLoading ? t("addHarvest.msg.saving") + "..." : t("addHarvest.btn.submit") }}
-                </button>                
-            </div>
+            
+            <button type="submit" :disabled="isLoading || rows.length === 0">
+                {{ isLoading ? t("addHarvest.msg.saving") + "..." : t("addHarvest.btn.submit") }}
+            </button>
 
             <PopUp v-if="successMsg" type="success" :msg="successMsg" @close="successMsg = null" />
             <PopUp v-if="error" type="error" :msg="error" @close="error = null" />         
@@ -129,12 +127,6 @@ async function handleSubmit() {
 form {
     display: flex;
     flex-direction: column;
-}
-
-.btnsPanel {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
 }
 
 .gDate,

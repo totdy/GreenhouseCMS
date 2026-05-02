@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import Chart from "chart.js/auto";
+Chart.register(ChartDataLabels);
+
 import { nextTick, onMounted, ref, watch } from "vue";
 import { GetRevenueByDate } from "@/scripts/api";
 import type { RevenueByDateItem } from "@/scripts/types";
@@ -16,11 +19,15 @@ const chartYear = ref(new Date().getFullYear());
 const MONTH_LABELS = [""];
 const ZERO_DATA = [0];
 
+function getCssVar(name: string): string {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
 function initChart() {
     if (!canvasRef.value) return;
 
     chart?.destroy();
-    chart = null;   
+    chart = null;
 
     chart = new Chart(canvasRef.value, {
         type: "line",
@@ -30,8 +37,8 @@ function initChart() {
                 {
                     label: t("home.chart.title"),
                     data: [...ZERO_DATA],
-                    borderColor: "#4caf82",
-                    backgroundColor: "rgba(76, 175, 130, 0.1)",
+                    borderColor: getCssVar("--primary"),
+                    backgroundColor: getCssVar("--primary05"),
                     fill: true,
                     tension: 0.3,
                 },
@@ -41,8 +48,29 @@ function initChart() {
             responsive: true,
             animation: { duration: 600, easing: "easeInOutQuart" },
             scales: {
-                x: { title: { display: true, text: t("home.chart.xAxis") } },
-                y: { title: { display: true, text: t("home.chart.yAxis") }, beginAtZero: true },
+                x: {
+                    ticks: { color: getCssVar("--text") },
+                    title: { color: getCssVar("--text"), display: true, text: t("home.chart.xAxis") },
+                    grid: { color: getCssVar("--highlight") },
+                },
+                y: {
+                    ticks: { color: getCssVar("--text") },
+                    title: { color: getCssVar("--text"), display: true, text: t("home.chart.yAxis") },
+                    beginAtZero: true,
+                    grid: { color: getCssVar("--highlight") },
+                },
+            },
+            plugins: {
+                datalabels: {
+                    anchor: "end",
+                    align: "top",
+                    color: getCssVar("--text"),
+                    font: { size: 11 },
+                    formatter: (value: number) => `€${value.toLocaleString()}`,
+                },
+                legend: {
+                    labels: { color: getCssVar("--text") },
+                },
             },
         },
     });
@@ -58,7 +86,7 @@ async function setChartData(labels: string[], values: number[]) {
 
 async function loadChartData(resetFirst = true) {
     if (!chart) return;
-    
+
     if (resetFirst) {
         await setChartData([...MONTH_LABELS], [...ZERO_DATA]);
     }
@@ -86,24 +114,22 @@ onMounted(() => {
 
 <template>
     <section>
-        <div>
+        <h2>
             <label>🗓️:</label>
             <select v-model="chartYear">
-                <option
-                    v-for="year in [2026].sort((a, b) => b - a)"
-                    :key="year"
-                    :value="year"
-                >
+                <option v-for="year in [2026].sort((a, b) => b - a)" :key="year" :value="year">
                     {{ year }}
                 </option>
             </select>
-        </div>
+        </h2>
         <canvas ref="canvasRef"></canvas>
     </section>
 </template>
 
 <style lang="css" scoped>
-div {
-    width: -webkit-fill-available;
+h2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 </style>

@@ -6,12 +6,13 @@
     --bg-light: hsl(82 100% 94%);
     --text: hsl(91 100% 2%);
     --text-muted: hsl(73 100% 11%);
-    --highlight: hsl(81 100% 88%);
 
+    --highlight: hsla(75, 84%, 24%, 0.5);
     --border: hsl(73 100% 11%);
-    --border-muted: hsl(75 100% 6%);    
-    
+    --border-muted: hsl(75 100% 6%);
+
     --primary: hsl(79 41% 57%);
+    --primary05: hsla(79,41%,57%, 0.5);
     --secondary: hsl(267 72% 78%);
 
     --danger: hsl(8 63% 66%);
@@ -22,18 +23,19 @@
 
 :root[data-theme="dark"] {
     --color: #194d1d;
-    
+
     --bg-dark: hsl(89 100% 1%);
     --bg: hsl(86 100% 2%);
     --bg-light: hsl(79 100% 4%);
     --text: hsl(81 97% 85%);
     --text-muted: hsl(80 35% 60%);
-    --highlight: hsl(75 83% 24%);
+    --highlight: hsla(75, 84%, 24%, 0.5);
 
     --border: hsl(78 47% 37%);
     --border-muted: hsl(79 35% 50%);
-    
+
     --primary: hsl(73 100% 11%);
+    --primary05: hsla(73,100%,11%, 0.5);
     --secondary: hsl(269 41% 34%);
 
     --danger: hsl(7 47% 42%);
@@ -44,6 +46,7 @@
 
 :root {
     --hover: linear-gradient(0deg, var(--bg), var(--bg-light));
+    --primary01: hsla(75, 84%, 24%, 0.5);
 }
 
 * {
