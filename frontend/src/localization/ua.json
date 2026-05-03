@@ -4,10 +4,31 @@
         "add": "Додати"
     },
     "home": {},
-    "RevenueChart": {
+    "revenueChart": {
         "title": "Дохід за датою",
         "yAxis": "Дохід, €",
         "xAxis": "Дата"
+    },
+    "activityChart": {
+        "title": "Кількість за місяцем",
+        "yAxis": "Кількість",
+        "xAxis": "Місяць"
+    },
+    "common":{
+        "month":{
+            "jan": "Січ",
+            "feb": "Лют",
+            "mar": "Бер",
+            "apr": "Кві",
+            "may": "Тра",
+            "jun": "Чер",
+            "jul": "Лип",
+            "aug": "Сер",
+            "sep": "Вер",
+            "oct": "Жов",
+            "nov": "Лис",
+            "dec": "Гру"
+        }
     },
     "recentActivity": {
         "title": "Нещодавня активність",

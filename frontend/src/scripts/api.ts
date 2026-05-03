@@ -1,4 +1,4 @@
-import type { HarvestPayload, ActivityResponse, RecentActivityResponse, RevenueByDateResponse } from "@/scripts/types"
+import type { HarvestPayload, ActivityPivotResponse, RecentActivityResponse, RevenueByDateResponse } from "@/scripts/types"
 
 const BASE_URL = "http://192.168.1.69:8000"
 
@@ -20,7 +20,7 @@ export async function GetRevenueByDate(chartYear: number): Promise<RevenueByDate
     return response.json()
 }
 
-export async function GetActivityByYear(year: number): Promise<ActivityResponse> {
+export async function GetActivityByYear(year: number): Promise<ActivityPivotResponse> {
     const response = await fetch(`${BASE_URL}/harvests/activity/${year}`)
 
     if (!response.ok) throw new Error(`Error: ${response.statusText}`)

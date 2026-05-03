@@ -4,10 +4,31 @@
         "add": "Add"
     },
     "home": {},
-    "RevenueChart": {
+    "revenueChart": {
         "title": "Revenue by date",
         "yAxis": "Revenue, €",
         "xAxis": "Date"
+    },
+    "activityChart": {
+        "title": "Count by month",
+        "yAxis": "Count",
+        "xAxis": "Month"
+    },
+    "common":{
+        "month":{
+            "jan": "Jan",
+            "feb": "Feb",
+            "mar": "Mar",
+            "apr": "Apr",
+            "may": "May",
+            "jun": "Jun",
+            "jul": "Jul",
+            "aug": "Aug",
+            "sep": "Sep",
+            "oct": "Oct",
+            "nov": "Nov",
+            "dec": "Dec"
+        }
     },
     "recentActivity": {
         "title": "Recent Activity",

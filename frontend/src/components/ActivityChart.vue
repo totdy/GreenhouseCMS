@@ -4,11 +4,11 @@ import Chart from "chart.js/auto";
 Chart.register(ChartDataLabels);
 
 import { nextTick, onMounted, ref, watch } from "vue";
-import { GetRevenueByDate } from "@/scripts/api";
-import type { RevenueByDateItem } from "@/scripts/types";
+import { GetActivityByYear } from "@/scripts/api";
+import type { ActivityPivotResponse } from "@/scripts/types";
+import { useI18n } from "vue-i18n";
 
-import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
+const { t } = useI18n();
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
@@ -16,8 +16,7 @@ let chart: Chart | null = null;
 
 const chartYear = ref(new Date().getFullYear());
 
-const EMPTY_LABELS = [""];
-const EMPTY_DATA = [0];
+const MONTH_LABELS = [t("common.month.jan"), t("common.month.feb"), t("common.month.mar"), t("common.month.apr"), t("common.month.may"), t("common.month.jun"), t("common.month.jul"), t("common.month.aug"), t("common.month.sep"), t("common.month.oct"), t("common.month.nov"), t("common.month.dec")];
 
 function getCssVar(name: string): string {
     return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -30,43 +29,36 @@ function initChart() {
     chart = null;
 
     chart = new Chart(canvasRef.value, {
-        type: "line",
+        type: "bar",
         data: {
-            labels: [...EMPTY_LABELS],
-            datasets: [
-                {
-                    label: t("revenueChart.title"),
-                    data: [...EMPTY_DATA],
-                    borderColor: getCssVar("--primary"),
-                    backgroundColor: getCssVar("--primary05"),
-                    fill: true,
-                    tension: 0.3,
-                },
-            ],
+            labels: [...MONTH_LABELS],
+            datasets: [],
         },
         options: {
             responsive: true,
             animation: { duration: 600, easing: "easeInOutQuart" },
             scales: {
                 x: {
+                    stacked: true,
                     ticks: { color: getCssVar("--text") },
-                    title: { color: getCssVar("--text"), display: true, text: t("revenueChart.xAxis") },
+                    title: { color: getCssVar("--text"), display: true, text: t("activityChart.xAxis") },
                     grid: { color: getCssVar("--highlight") },
                 },
                 y: {
+                    stacked: true,
                     ticks: { color: getCssVar("--text") },
-                    title: { color: getCssVar("--text"), display: true, text: t("revenueChart.yAxis") },
+                    title: { color: getCssVar("--text"), display: true, text: t("activityChart.yAxis") },
                     beginAtZero: true,
                     grid: { color: getCssVar("--highlight") },
                 },
             },
             plugins: {
                 datalabels: {
-                    anchor: "end",
-                    align: "top",
+                    clip: false,
                     color: getCssVar("--text"),
-                    font: { size: 11 },
-                    formatter: (value: number) => `€${value.toLocaleString()}`,
+                    font: { size: 10 },
+                    display: (ctx) => (ctx.dataset.data[ctx.dataIndex] as number) > 0,
+                    formatter: (value: number) => value,
                 },
                 legend: {
                     labels: { color: getCssVar("--text") },
@@ -76,39 +68,40 @@ function initChart() {
     });
 }
 
-async function setChartData(labels: string[], values: number[]) {
+async function setChartData({ data }: ActivityPivotResponse) {
     if (!chart) return;
     await nextTick();
-    chart.data.labels!.splice(0, chart.data.labels!.length, ...labels);
-    (chart.data.datasets[0].data as number[]).splice(0, chart.data.datasets[0].data.length, ...values);
+
+    chart.data.datasets.splice(
+        0,
+        chart.data.datasets.length,
+        ...data.map((s, i) => ({
+            label: t(`addHarvest.type.${s.plant_type.toLowerCase()}`),
+            data: s.count,
+            backgroundColor: getCssVar("--primary"),
+        }))
+    );
+
     chart.update();
 }
 
-async function loadChartData(resetFirst = true) {
+async function loadChartData() {
     if (!chart) return;
 
-    if (resetFirst) {
-        await setChartData([...EMPTY_LABELS], [...EMPTY_DATA]);
-    }
-
     try {
-        const resp = await GetRevenueByDate(chartYear.value);
-        const data: RevenueByDateItem[] = resp?.data ?? [];
-        if (!data.length) return;
-        await setChartData(
-            data.map((row) => row.date),
-            data.map((row) => row.revenue),
-        );
+        const resp = await GetActivityByYear(chartYear.value);
+        if (!resp?.data?.length) return;
+        await setChartData(resp);
     } catch (err) {
-        console.error("Failed to load revenue data:", err);
+        console.error("Failed to load activity data:", err);
     }
 }
 
-watch(chartYear, () => loadChartData(true));
+watch(chartYear, loadChartData);
 
 onMounted(() => {
     initChart();
-    loadChartData(false);
+    loadChartData();
 });
 </script>
 

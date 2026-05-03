@@ -10,22 +10,21 @@ export interface HarvestPayload {
   data: HarvestItem[]
 }
 
-export interface ActivityItem {
-  date: string
-  count: number
+export interface ActivitySeries {
+  plant_type: string
+  count: number[]
 }
 
-export interface ActivityResponse {
-  year: number
-  data: ActivityItem[]
+export interface ActivityPivotResponse {
+  data: ActivitySeries[]
 }
 
-export interface RevenueByDateItem{
+export interface RevenueByDateItem {
   date: string
   revenue: number
 }
-    
-export interface RevenueByDateResponse{
+
+export interface RevenueByDateResponse {
   data: RevenueByDateItem[]
 }
 

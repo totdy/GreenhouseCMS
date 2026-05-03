@@ -1,7 +1,7 @@
-from sqlalchemy import create_engine, select, update, func
+from sqlalchemy import create_engine, extract, select, update, func
 from sqlalchemy.orm import sessionmaker
 
-from src.schemas import HarvestPayload, HarvestIn, RevenueByDateItem, ActivityItem, HarvestOut
+from src.schemas import HarvestPayload, HarvestIn, RevenueByDateItem, HarvestOut
 
 from src.models import Harvests
 
@@ -58,16 +58,17 @@ def GetRevenueByDate(year: int) -> list[RevenueByDateItem]:
         result = new_session.execute(query)
         return result.all() # type: ignore
 
-def GetActivityByYear(year: int) -> list[ActivityItem]:
+def GetActivityByYear(year: int):
     with session() as new_session:
         query = (
             select(
-                Harvests.date,
-                func.count(Harvests.id).label("count"),
+                extract('month', Harvests.date).label("month"),
+                Harvests.plant_type,             
+                func.sum(Harvests.count).label("count"),
             )
             .filter(Harvests.date.between(f"{year}-01-01", f"{year}-12-31"))
-            .group_by(Harvests.date)
-            .order_by(Harvests.date)
+            .group_by(extract('month', Harvests.date), Harvests.plant_type)
+            .order_by(extract('month', Harvests.date))
         )
         result = new_session.execute(query)
         return result.all() # type: ignore

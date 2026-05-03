@@ -1,5 +1,4 @@
 from datetime import date, datetime
-
 from pydantic import BaseModel
 
 class HarvestIn(BaseModel):
@@ -23,12 +22,12 @@ class RevenueByDateItem(BaseModel):
 class RevenueByDateResponse(BaseModel):
     data: list[RevenueByDateItem]
 
-class ActivityItem(BaseModel):
-    date: date
-    count: int
+class ActivitySeries(BaseModel):
+    plant_type: str
+    count: list[float]
 
-class ActivityResponse(BaseModel):    
-    data: list[ActivityItem]
+class ActivityPivotResponse(BaseModel):
+    data: list[ActivitySeries]
 
 class RecentActivityResponse(BaseModel):
     data: list[HarvestOut]
