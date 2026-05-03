@@ -18,18 +18,18 @@ onMounted(() => loadRecent())
 
 <template>
   <section>
-    <h2>{{ t("home.recentActivity.title") }}</h2>
+    <h2>{{ t("recentActivity.title") }}</h2>
 
     <ul v-if="!loadingRecent && recentActivity.length">
       <li v-for="item in recentActivity" :key="item.id">
         <p>{{ t(`addHarvest.type.${item.plant_type.toLowerCase()}`) }}</p>
         <p>{{ item.count }} {{ t(`addHarvest.unit.${item.count_unit.toLowerCase()}`) }}</p>
-        <p>€{{ item.unit_price.toFixed(2) }}/unit</p>
+        <p>€{{ item.unit_price.toFixed(2) }}/{{ t("addHarvest.unit.title") }}</p>
         <p>{{ formatDate(item.date) }}</p>
       </li>
     </ul>
 
-    <h2 v-else>{{ t("home.recentActivity.empty") }}</h2>
+    <h2 v-else>{{ t("recentActivity.empty") }}</h2>
   </section>
 </template>
 

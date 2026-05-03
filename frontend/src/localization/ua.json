@@ -3,28 +3,27 @@
         "home": "Головна",
         "add": "Додати"
     },
-    "home": {
-        "chart": {
-            "title": "Дохід за датою",
-            "yAxis": "Дохід, €",
-            "xAxis": "Дата"
-        },
-        "recentActivity": {
-            "title": "Нещодавня активність",
-            "empty": "Немає нещодавньої активності"
-        }
+    "home": {},
+    "RevenueChart": {
+        "title": "Дохід за датою",
+        "yAxis": "Дохід, €",
+        "xAxis": "Дата"
     },
-    "addHarvest":{
+    "recentActivity": {
+        "title": "Нещодавня активність",
+        "empty": "Немає нещодавньої активності"
+    },
+    "addHarvest": {
         "title": "Додати врожай",
         "btn": {
             "add": "+ Додати ряд",
             "submit": "↗ Надіслати всі",
-            "remove" : "- Видалити"
-        },     
-        "date" : {
+            "remove": "- Видалити"
+        },
+        "date": {
             "title": "Дата збору врожаю"
         },
-        "type" : {
+        "type": {
             "title": "Тип",
             "tomato": "🍅 Томат",
             "cucumber": "🥒 Огірок",
@@ -41,12 +40,12 @@
             "coriander": "🌿 Коріандр",
             "basil": "💐 Базилік"
         },
-        "count" : {
+        "count": {
             "title": "Кількість"
         },
-        "price" : {
+        "price": {
             "title": "Ціна"
-        },        
+        },
         "unit": {
             "title": "Одиниця",
             "kg": "⚫ кг",

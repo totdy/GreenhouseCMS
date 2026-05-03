@@ -3,28 +3,27 @@
         "home": "Home",
         "add": "Add"
     },
-    "home": {
-        "chart": {
-            "title": "Revenue by date",
-            "yAxis": "Revenue, €",
-            "xAxis": "Date"
-        },
-        "recentActivity": {
-            "title": "Recent Activity",
-            "empty": "No recent activity"
-        }
+    "home": {},
+    "RevenueChart": {
+        "title": "Revenue by date",
+        "yAxis": "Revenue, €",
+        "xAxis": "Date"
     },
-    "addHarvest":{
+    "recentActivity": {
+        "title": "Recent Activity",
+        "empty": "No recent activity"
+    },
+    "addHarvest": {
         "title": "Add Harvest",
         "btn": {
             "add": "+ Add Row",
             "submit": "↗ Submit All",
-            "remove" : "- Remove"
+            "remove": "- Remove"
         },
-        "date" : {
+        "date": {
             "title": "Date of harvest"
         },
-        "type" : {
+        "type": {
             "title": "Type",
             "tomato": "🍅 Tomato",
             "cucumber": "🥒 Cucumber",
@@ -41,10 +40,10 @@
             "coriander": "🌿 Coriander",
             "basil": "💐 Basil"
         },
-        "count" : {
+        "count": {
             "title": "Count"
         },
-        "price" : {
+        "price": {
             "title": "Price"
         },
         "unit": {
@@ -52,7 +51,7 @@
             "kg": "⚫ kgs",
             "box": "📦 boxes",
             "bunch": "💐 bunches"
-        },        
+        },
         "msg": {
             "saving": "Saving",
             "success": "Successfully added {rows} row(s)!"

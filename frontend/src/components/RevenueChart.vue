@@ -35,7 +35,7 @@ function initChart() {
             labels: [...MONTH_LABELS],
             datasets: [
                 {
-                    label: t("home.chart.title"),
+                    label: t("RevenueChart.title"),
                     data: [...ZERO_DATA],
                     borderColor: getCssVar("--primary"),
                     backgroundColor: getCssVar("--primary05"),
@@ -50,12 +50,12 @@ function initChart() {
             scales: {
                 x: {
                     ticks: { color: getCssVar("--text") },
-                    title: { color: getCssVar("--text"), display: true, text: t("home.chart.xAxis") },
+                    title: { color: getCssVar("--text"), display: true, text: t("RevenueChart.xAxis") },
                     grid: { color: getCssVar("--highlight") },
                 },
                 y: {
                     ticks: { color: getCssVar("--text") },
-                    title: { color: getCssVar("--text"), display: true, text: t("home.chart.yAxis") },
+                    title: { color: getCssVar("--text"), display: true, text: t("RevenueChart.yAxis") },
                     beginAtZero: true,
                     grid: { color: getCssVar("--highlight") },
                 },
