@@ -44,21 +44,34 @@ def GetHarvestRevenueByDate(year: int):
     return {"data": GetRevenueByDate(year=year)}
 
 @app.get("/harvests/activity/{year}", response_model=ActivityPivotResponse)
-def GetHarvestActivity(year: int):
+def GetHarvestActivity(year: int):    
     rows = GetActivityByYear(year=year)
 
-    plant_types = sorted(set(r.plant_type for r in rows))
-    lookup = {(r.month, r.plant_type): r.count for r in rows}
+    all_plant_types = []
+    for row in rows:
+        if row.plant_type not in all_plant_types:
+            all_plant_types.append((row.plant_type, row.count_unit))
+    all_plant_types = sorted(all_plant_types)
 
-    return {
-        "data": [
-            {
-                "plant_type": plant,
-                "count": [lookup.get((m, plant), 0) for m in range(1, 13)],
-            }
-            for plant in plant_types
-        ]
-    }
+    count_by_month_and_plant = {}
+    for row in rows:        
+        count_by_month_and_plant[(row.month, row.plant_type)] = row.count
+
+    result_list = []
+    for plant in all_plant_types:
+        monthly_counts = []
+        for month_number in range(1, 13):            
+            count = count_by_month_and_plant.get((month_number, plant[0]), 0)
+            monthly_counts.append(count)
+
+        plant_entry = {
+            "plant_type": plant[0],
+            "count": monthly_counts,
+            "count_unit": plant[1],
+        }
+        result_list.append(plant_entry)
+
+    return {"data": result_list}
 
 @app.get("/harvests/recent", response_model=RecentActivityResponse)
 def GetLastActivity(limit: int = 10):

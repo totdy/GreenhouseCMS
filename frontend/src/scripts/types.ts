@@ -13,6 +13,7 @@ export interface HarvestPayload {
 export interface ActivitySeries {
   plant_type: string
   count: number[]
+  count_unit: string
 }
 
 export interface ActivityPivotResponse {

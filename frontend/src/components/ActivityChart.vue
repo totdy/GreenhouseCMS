@@ -29,7 +29,7 @@ function initChart() {
     chart = null;
 
     chart = new Chart(canvasRef.value, {
-        type: "bar",
+        type: "line",
         data: {
             labels: [...MONTH_LABELS],
             datasets: [],
@@ -79,6 +79,10 @@ async function setChartData({ data }: ActivityPivotResponse) {
             label: t(`addHarvest.type.${s.plant_type.toLowerCase()}`),
             data: s.count,
             backgroundColor: getCssVar("--primary"),
+            borderColor: getCssVar("--primary"),
+            borderWidth: 2,
+            fill: false,
+            tension: 0.3,
         }))
     );
 

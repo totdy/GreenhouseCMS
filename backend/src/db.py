@@ -65,9 +65,10 @@ def GetActivityByYear(year: int):
                 extract('month', Harvests.date).label("month"),
                 Harvests.plant_type,             
                 func.sum(Harvests.count).label("count"),
+                Harvests.count_unit
             )
             .filter(Harvests.date.between(f"{year}-01-01", f"{year}-12-31"))
-            .group_by(extract('month', Harvests.date), Harvests.plant_type)
+            .group_by(extract('month', Harvests.date), Harvests.plant_type, Harvests.count_unit)
             .order_by(extract('month', Harvests.date))
         )
         result = new_session.execute(query)

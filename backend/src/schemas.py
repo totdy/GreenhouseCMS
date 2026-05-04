@@ -25,6 +25,7 @@ class RevenueByDateResponse(BaseModel):
 class ActivitySeries(BaseModel):
     plant_type: str
     count: list[float]
+    count_unit: str
 
 class ActivityPivotResponse(BaseModel):
     data: list[ActivitySeries]
