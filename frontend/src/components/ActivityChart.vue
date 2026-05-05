@@ -39,16 +39,14 @@ function initChart() {
             animation: { duration: 600, easing: "easeInOutQuart" },
             scales: {
                 x: {
-                    stacked: true,
                     ticks: { color: getCssVar("--text") },
                     title: { color: getCssVar("--text"), display: true, text: t("activityChart.xAxis") },
                     grid: { color: getCssVar("--highlight") },
                 },
                 y: {
-                    stacked: true,
+                    beginAtZero: true,
                     ticks: { color: getCssVar("--text") },
                     title: { color: getCssVar("--text"), display: true, text: t("activityChart.yAxis") },
-                    beginAtZero: true,
                     grid: { color: getCssVar("--highlight") },
                 },
             },
@@ -75,15 +73,18 @@ async function setChartData({ data }: ActivityPivotResponse) {
     chart.data.datasets.splice(
         0,
         chart.data.datasets.length,
-        ...data.map((s, i) => ({
-            label: t(`addHarvest.type.${s.plant_type.toLowerCase()}`),
-            data: s.count,
-            backgroundColor: getCssVar("--primary"),
-            borderColor: getCssVar("--primary"),
-            borderWidth: 2,
-            fill: false,
-            tension: 0.3,
-        }))
+        ...data.map((s, i) => {
+            const color = getCssVar("--primary");
+            return {
+                label: t(`addHarvest.type.${s.plant_type.toLowerCase()}`),
+                data: s.count,
+                borderColor: color,
+                backgroundColor: color,
+                borderWidth: 2,
+                fill: false,
+                tension: 0.3,
+            };
+        })
     );
 
     chart.update();

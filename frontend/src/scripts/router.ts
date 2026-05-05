@@ -10,9 +10,9 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: "/add",
-      name: "add",
-      component: () => import("@/views/AddHarvestView.vue"),
+      path: "/harvest",
+      name: "harvest",
+      component: () => import("@/views/HarvestView.vue"),
     }
   ],
 })

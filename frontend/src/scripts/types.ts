@@ -1,4 +1,4 @@
-export interface HarvestItem {
+export interface HarvestIn {
   date: string
   plant_type: string
   count: number
@@ -6,8 +6,13 @@ export interface HarvestItem {
   unit_price: number
 }
 
+export interface HarvestOut extends HarvestIn {
+  id: number
+  created_at: string
+}
+
 export interface HarvestPayload {
-  data: HarvestItem[]
+  data: HarvestIn[]
 }
 
 export interface ActivitySeries {
@@ -29,16 +34,9 @@ export interface RevenueByDateResponse {
   data: RevenueByDateItem[]
 }
 
-export interface RecentActivityItem {
-  id: number
-  date: string
-  plant_type: string
-  count: number
-  count_unit: string
-  unit_price: number
-  created_at: string
-}
-
-export interface RecentActivityResponse {
-  data: RecentActivityItem[]
+export interface HarvestsAllResponse {
+  data: HarvestOut[]
+  total: number
+  page: number
+  total_pages: number
 }

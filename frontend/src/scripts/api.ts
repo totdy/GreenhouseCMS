@@ -1,8 +1,8 @@
-import type { HarvestPayload, ActivityPivotResponse, RecentActivityResponse, RevenueByDateResponse } from "@/scripts/types"
+import type { HarvestPayload, ActivityPivotResponse, HarvestsAllResponse, RevenueByDateResponse } from "@/scripts/types"
 
 const BASE_URL = "http://192.168.1.69:8000"
 
-export async function addHarvests(payload: HarvestPayload) {
+export async function AddHarvests(payload: HarvestPayload) {
     const response = await fetch(`${BASE_URL}/harvests`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -13,22 +13,22 @@ export async function addHarvests(payload: HarvestPayload) {
     return response.json()
 }
 
+export async function GetHarvestsAll(page: number = 1): Promise<HarvestsAllResponse> {
+    const response = await fetch(`${BASE_URL}/harvests/all/${page}`)
+
+    if (!response.ok) throw new Error(`Error: ${response.statusText}`)
+    return response.json()
+}
+
 export async function GetRevenueByDate(chartYear: number): Promise<RevenueByDateResponse> {
-    const response = await fetch(`${BASE_URL}/harvests/revenue-by-date/${chartYear}`)
+    const response = await fetch(`${BASE_URL}/revenue-by-date/${chartYear}`)
 
     if (!response.ok) throw new Error(`Error: ${response.statusText}`)
     return response.json()
 }
 
 export async function GetActivityByYear(year: number): Promise<ActivityPivotResponse> {
-    const response = await fetch(`${BASE_URL}/harvests/activity/${year}`)
-
-    if (!response.ok) throw new Error(`Error: ${response.statusText}`)
-    return response.json()
-}
-
-export async function GetRecentActivity(limit: number = 10): Promise<RecentActivityResponse> {
-    const response = await fetch(`${BASE_URL}/harvests/recent?limit=${limit}`)
+    const response = await fetch(`${BASE_URL}/activity/${year}`)
 
     if (!response.ok) throw new Error(`Error: ${response.statusText}`)
     return response.json()

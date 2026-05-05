@@ -30,5 +30,8 @@ class ActivitySeries(BaseModel):
 class ActivityPivotResponse(BaseModel):
     data: list[ActivitySeries]
 
-class RecentActivityResponse(BaseModel):
+class HarvestsAllResponse(BaseModel):
     data: list[HarvestOut]
+    total: int
+    page: int
+    total_pages: int

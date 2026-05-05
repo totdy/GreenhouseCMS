@@ -9,7 +9,7 @@ import ActivityTable from '@/components/ActivityTable.vue';
   <div>
     <ActivityChart />
     <ActivityTable />
-  </div>  
+  </div>
 </template>
 
 <style lang="css" scoped>
@@ -17,5 +17,9 @@ div {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 1rem;
+
+  @media (max-width: 750px) {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

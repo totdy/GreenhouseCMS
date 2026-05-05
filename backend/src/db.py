@@ -44,6 +44,20 @@ def UpdateHarvest(id: int, payload: HarvestIn) -> None:
         new_session.execute(update_entry)
         new_session.commit()
 
+def GetHarvestsAll(page: int = 1) -> tuple[list[HarvestOut], int]:
+    with session() as new_session:
+        total: int = new_session.execute(select(func.count()).select_from(Harvests)).scalar_one()
+
+        query = (
+            select(Harvests)
+            .order_by(Harvests.created_at.desc())
+            .offset((page - 1) * 15)
+            .limit(15)
+        )
+        result = new_session.execute(query)
+        rows = result.scalars().all() # type: ignore
+        return rows, total # type: ignore
+
 def GetRevenueByDate(year: int) -> list[RevenueByDateItem]:
     with session() as new_session:
         query = (
@@ -73,13 +87,3 @@ def GetActivityByYear(year: int):
         )
         result = new_session.execute(query)
         return result.all() # type: ignore
-
-def GetRecentActivity(limit: int = 10) -> list[HarvestOut]:
-    with session() as new_session:
-        query = (
-            select(Harvests)
-            .order_by(Harvests.created_at.desc())
-            .limit(limit)
-        )
-        result = new_session.execute(query)
-        return result.scalars().all() # type: ignore

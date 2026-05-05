@@ -14,8 +14,8 @@
         "yAxis": "Кількість",
         "xAxis": "Місяць"
     },
-    "common":{
-        "month":{
+    "common": {
+        "month": {
             "jan": "Січ",
             "feb": "Лют",
             "mar": "Бер",
@@ -30,8 +30,8 @@
             "dec": "Гру"
         }
     },
-    "recentActivity": {
-        "title": "Нещодавня активність",
+    "getHarvest": {
+        "title": "Активність",
         "empty": "Немає нещодавньої активності"
     },
     "addHarvest": {

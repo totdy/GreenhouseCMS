@@ -41,8 +41,8 @@ onMounted(() => {
         <ol>
             <li v-for="item in tableData" :key="item.plant_type">
                 <span>{{ t(`addHarvest.type.${item.plant_type.toLocaleLowerCase()}`) }}</span>
-                <span>{{ item.count.reduce((accumulator,
-                    currentValue) => accumulator + currentValue, 0) }}
+                <span>{{item.count.reduce((accumulator,
+                    currentValue) => accumulator + currentValue, 0)}}
                     {{ t(`addHarvest.unit.${item.count_unit.toLocaleLowerCase()}`) }}
                 </span>
             </li>
@@ -57,7 +57,7 @@ h2 {
     align-items: center;
 }
 
-ol{
+ol {
     gap: 0.5rem;
 }
 

@@ -12,7 +12,7 @@ const { t } = useI18n()
   <header>
     <nav>
       <RouterLink to="/">{{ t("navbar.home") }}</RouterLink>
-      <RouterLink to="/add">{{ t("navbar.add") }}</RouterLink>
+      <RouterLink to="/harvest">{{ t("navbar.add") }}</RouterLink>
       <ThemeToggle />
     </nav>
   </header>

@@ -12,7 +12,7 @@
     --border-muted: hsl(75 100% 6%);
 
     --primary: hsl(79 41% 57%);
-    --primary05: hsla(79,41%,57%, 0.5);
+    --primary05: hsla(79, 41%, 57%, 0.5);
     --secondary: hsl(267 72% 78%);
 
     --danger: hsl(8 63% 66%);
@@ -35,7 +35,7 @@
     --border-muted: hsl(79 35% 50%);
 
     --primary: hsl(73 100% 11%);
-    --primary05: hsla(73,100%,11%, 0.5);
+    --primary05: hsla(73, 100%, 11%, 0.5);
     --secondary: hsl(269 41% 34%);
 
     --danger: hsl(7 47% 42%);

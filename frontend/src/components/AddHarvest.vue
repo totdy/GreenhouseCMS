@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from "vue"
-import type { HarvestItem } from "@/scripts/types"
-import { addHarvests } from "@/scripts/api"
-import { useRecentActivity } from "@/scripts/useRecentActivity"
+import type { HarvestIn } from "@/scripts/types"
+import { AddHarvests } from "@/scripts/api"
+import { useHarvest } from "@/scripts/useHarvest"
 
 import { useI18n } from 'vue-i18n'
 import PopUp from "./PopUp.vue"
@@ -18,9 +18,9 @@ watch(globalDate, (newDate) => {
     rows.value.forEach(row => row.date = newDate)
 })
 
-const { loadRecent } = useRecentActivity()
+const { loadPage } = useHarvest()
 
-const createEmptyRow = (): HarvestItem => ({
+const createEmptyRow = (): HarvestIn => ({
     date: globalDate.value,
     plant_type: "",
     count: 0,
@@ -28,7 +28,7 @@ const createEmptyRow = (): HarvestItem => ({
     unit_price: 0,
 })
 
-const rows = ref<HarvestItem[]>([createEmptyRow()])
+const rows = ref<HarvestIn[]>([createEmptyRow()])
 
 function addRow() {
     rows.value.push(createEmptyRow())
@@ -44,11 +44,11 @@ async function handleSubmit() {
     successMsg.value = null
 
     try {
-        const result = await addHarvests({ data: rows.value })
+        const result = await AddHarvests({ data: rows.value })
 
-        successMsg.value = t("addHarvest.msg.success", { rows: result.inserted })        
+        successMsg.value = t("addHarvest.msg.success", { rows: result.inserted })
 
-        await loadRecent()
+        await loadPage(1)
     } catch (err: any) {
         error.value = err.message
     } finally {
@@ -109,16 +109,17 @@ async function handleSubmit() {
                     <input v-model.number="row.unit_price" type="number" step="0.05" min="0" required />
                 </div>
                 <div>
-                    <button class="remove" type="button" @click="removeRow(index)">{{ t("addHarvest.btn.remove") }}</button>
+                    <button class="remove" type="button" @click="removeRow(index)">{{ t("addHarvest.btn.remove")
+                        }}</button>
                 </div>
             </div>
-            
+
             <button type="submit" :disabled="isLoading || rows.length === 0">
                 {{ isLoading ? t("addHarvest.msg.saving") + "..." : t("addHarvest.btn.submit") }}
             </button>
 
             <PopUp v-if="successMsg" type="success" :msg="successMsg" @close="successMsg = null" />
-            <PopUp v-if="error" type="error" :msg="error" @close="error = null" />         
+            <PopUp v-if="error" type="error" :msg="error" @close="error = null" />
 
         </form>
     </section>

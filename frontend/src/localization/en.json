@@ -14,8 +14,8 @@
         "yAxis": "Count",
         "xAxis": "Month"
     },
-    "common":{
-        "month":{
+    "common": {
+        "month": {
             "jan": "Jan",
             "feb": "Feb",
             "mar": "Mar",
@@ -30,8 +30,8 @@
             "dec": "Dec"
         }
     },
-    "recentActivity": {
-        "title": "Recent Activity",
+    "getHarvest": {
+        "title": "Activity",
         "empty": "No recent activity"
     },
     "addHarvest": {

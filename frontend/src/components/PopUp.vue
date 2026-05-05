@@ -4,11 +4,11 @@ import { onMounted } from 'vue';
 const props = defineProps({
     type: {
         type: String,
-        required: true,        
+        required: true,
     },
     msg: {
         type: String,
-        required: true,        
+        required: true,
     },
 })
 
@@ -30,15 +30,20 @@ onMounted(() => {
 div {
     display: flex;
     justify-content: center;
+    align-items: center;
 
     position: fixed;
     top: 0;
     left: 0;
 
     width: 100%;
+    height: 100vh;
 
     padding: 1rem;
+
+    font-size: xx-large;
 }
+
 .info {
     background-color: var(--info);
 }
