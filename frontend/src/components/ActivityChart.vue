@@ -4,14 +4,13 @@ import Chart from "chart.js/auto";
 Chart.register(ChartDataLabels);
 
 import { nextTick, onMounted, ref, watch } from "vue";
-import { GetActivityByYear } from "@/scripts/api";
-import type { ActivityPivotResponse } from "@/scripts/types";
-import { useI18n } from "vue-i18n";
+import type { ActivitySeries } from "@/scripts/types";
 
+import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
 const props = defineProps<{
-    year: number;
+    data: ActivitySeries[];
 }>();
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
@@ -68,14 +67,14 @@ function initChart() {
     });
 }
 
-async function setChartData({ data }: ActivityPivotResponse) {
+async function applyData(data: ActivitySeries[]) {
     if (!chart) return;
     await nextTick();
 
     chart.data.datasets.splice(
         0,
         chart.data.datasets.length,
-        ...data.map((s, i) => {
+        ...data.map((s) => {
             const color = getCssVar("--primary");
             return {
                 label: t(`addHarvest.type.${s.plant_type.toLowerCase()}`),
@@ -86,33 +85,35 @@ async function setChartData({ data }: ActivityPivotResponse) {
                 fill: false,
                 tension: 0.3,
             };
-        })
+        }),
     );
 
     chart.update();
 }
 
-async function loadChartData() {
-    if (!chart) return;
-
-    try {
-        const resp = await GetActivityByYear(props.year);        
-        await setChartData(resp);
-    } catch (err) {
-        console.error("Failed to load activity data:", err);
-    }
-}
-
-watch(() => props.year, loadChartData);
+watch(
+    () => props.data,
+    (data) => {
+        if (!chart) return;
+        if (!data.length) {
+            chart.data.datasets.splice(0, chart.data.datasets.length);
+            chart.update();
+            return;
+        }
+        void applyData(data);
+    },
+    { deep: true },
+);
 
 onMounted(() => {
     initChart();
-    loadChartData();
+    if (props.data.length) void applyData(props.data);
 });
 </script>
 
 <template>
     <section>
+        <h2>{{ t("activityChart.title") }}</h2>
         <canvas ref="canvasRef"></canvas>
     </section>
 </template>

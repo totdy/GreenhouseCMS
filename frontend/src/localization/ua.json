@@ -10,9 +10,12 @@
         "xAxis": "Дата"
     },
     "activityChart": {
-        "title": "Кількість за місяцем",
+        "title": "Щомісячна активність",
         "yAxis": "Кількість",
         "xAxis": "Місяць"
+    },
+    "activityTable": {
+        "title": "Річна активність"
     },
     "common": {
         "month": {

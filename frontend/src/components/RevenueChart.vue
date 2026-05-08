@@ -116,6 +116,7 @@ onMounted(() => {
 
 <template>
     <section>
+        <h2>{{ t("revenueChart.title") }}</h2>
         <canvas ref="canvasRef"></canvas>
     </section>
 </template>

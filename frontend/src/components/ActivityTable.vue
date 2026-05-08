@@ -1,38 +1,20 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
-import { GetActivityByYear } from "@/scripts/api";
 import type { ActivitySeries } from "@/scripts/types";
-import { useI18n } from "vue-i18n";
 
+import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
-const props = defineProps<{
-    year: number;
+const props = defineProps<{    
+    data: ActivitySeries[]
 }>();
 
-const tableData = ref<ActivitySeries[]>([]);
-
-async function loadChartData() {
-    try {
-        const resp = await GetActivityByYear(props.year);        
-        tableData.value = resp.data;
-
-    } catch (err) {
-        console.error("Failed to load activity data:", err);
-    }
-}
-
-watch(() => props.year, loadChartData);
-
-onMounted(() => {
-    loadChartData();
-});
 </script>
 
 <template>
     <section>
+        <h2>{{ t("activityTable.title") }}</h2>
         <ol>
-            <li v-for="item in tableData" :key="item.plant_type">
+            <li v-for="item in props.data" :key="item.plant_type">
                 <span>{{ t(`addHarvest.type.${item.plant_type.toLocaleLowerCase()}`) }}</span>
                 <span>{{item.count.reduce((accumulator,
                     currentValue) => accumulator + currentValue, 0)}}

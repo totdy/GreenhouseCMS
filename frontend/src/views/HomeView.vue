@@ -2,9 +2,26 @@
 import RevenueChart from '@/components/RevenueChart.vue';
 import ActivityChart from '@/components/ActivityChart.vue';
 import ActivityTable from '@/components/ActivityTable.vue';
-import { ref } from 'vue';
+
+import { GetActivityByYear } from "@/scripts/api";
+import type { ActivitySeries } from "@/scripts/types";
+
+import { ref, watch } from 'vue';
 
 const chartYear = ref(new Date().getFullYear());
+
+const activityData = ref<ActivitySeries[]>([])
+
+async function loadActivityData() {
+  try {
+    const resp = await GetActivityByYear(chartYear.value);
+    activityData.value = resp?.data ?? [];
+  } catch (err) {
+    console.error("Failed to load activity data:", err);
+  }
+}
+
+watch(chartYear, loadActivityData, { immediate: true });
 </script>
 
 <template>
@@ -21,8 +38,8 @@ const chartYear = ref(new Date().getFullYear());
 
   <RevenueChart :year="chartYear" />
   <div>
-    <ActivityChart :year="chartYear" />
-    <ActivityTable :year="chartYear" />
+    <ActivityChart :data="activityData" />
+    <ActivityTable :data="activityData" />
   </div>
 </template>
 

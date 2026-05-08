@@ -10,9 +10,12 @@
         "xAxis": "Date"
     },
     "activityChart": {
-        "title": "Count by month",
+        "title": "Monthly activity",
         "yAxis": "Count",
         "xAxis": "Month"
+    },
+    "activityTable": {
+        "title": "Yearly Activity"
     },
     "common": {
         "month": {
