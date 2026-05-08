@@ -6,14 +6,15 @@ import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 
-const chartYear = ref(new Date().getFullYear());
+const props = defineProps<{
+    year: number;
+}>();
 
 const tableData = ref<ActivitySeries[]>([]);
 
 async function loadChartData() {
     try {
-        const resp = await GetActivityByYear(chartYear.value);
-        if (!resp?.data?.length) return;
+        const resp = await GetActivityByYear(props.year);        
         tableData.value = resp.data;
 
     } catch (err) {
@@ -21,7 +22,7 @@ async function loadChartData() {
     }
 }
 
-watch(chartYear, loadChartData);
+watch(() => props.year, loadChartData);
 
 onMounted(() => {
     loadChartData();
@@ -30,14 +31,6 @@ onMounted(() => {
 
 <template>
     <section>
-        <h2>
-            <label>🗓️:</label>
-            <select v-model="chartYear">
-                <option v-for="year in [2026].sort((a, b) => b - a)" :key="year" :value="year">
-                    {{ year }}
-                </option>
-            </select>
-        </h2>
         <ol>
             <li v-for="item in tableData" :key="item.plant_type">
                 <span>{{ t(`addHarvest.type.${item.plant_type.toLocaleLowerCase()}`) }}</span>
@@ -51,12 +44,6 @@ onMounted(() => {
 </template>
 
 <style lang="css" scoped>
-h2 {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
 ol {
     gap: 0.5rem;
 }

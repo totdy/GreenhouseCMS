@@ -10,11 +10,13 @@ import type { RevenueByDateItem } from "@/scripts/types";
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
+const props = defineProps<{
+    year: number;
+}>();
+
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
 let chart: Chart | null = null;
-
-const chartYear = ref(new Date().getFullYear());
 
 const EMPTY_LABELS = [""];
 const EMPTY_DATA = [0];
@@ -92,7 +94,7 @@ async function loadChartData(resetFirst = true) {
     }
 
     try {
-        const resp = await GetRevenueByDate(chartYear.value);
+        const resp = await GetRevenueByDate(props.year);
         const data: RevenueByDateItem[] = resp?.data ?? [];
         if (!data.length) return;
         await setChartData(
@@ -104,7 +106,7 @@ async function loadChartData(resetFirst = true) {
     }
 }
 
-watch(chartYear, () => loadChartData(true));
+watch(() => props.year, () => loadChartData(true));
 
 onMounted(() => {
     initChart();
@@ -114,22 +116,8 @@ onMounted(() => {
 
 <template>
     <section>
-        <h2>
-            <label>🗓️:</label>
-            <select v-model="chartYear">
-                <option v-for="year in [2026].sort((a, b) => b - a)" :key="year" :value="year">
-                    {{ year }}
-                </option>
-            </select>
-        </h2>
         <canvas ref="canvasRef"></canvas>
     </section>
 </template>
 
-<style lang="css" scoped>
-h2 {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-</style>
+<style lang="css" scoped></style>

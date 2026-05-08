@@ -10,11 +10,13 @@ import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 
+const props = defineProps<{
+    year: number;
+}>();
+
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
 let chart: Chart | null = null;
-
-const chartYear = ref(new Date().getFullYear());
 
 const MONTH_LABELS = [t("common.month.jan"), t("common.month.feb"), t("common.month.mar"), t("common.month.apr"), t("common.month.may"), t("common.month.jun"), t("common.month.jul"), t("common.month.aug"), t("common.month.sep"), t("common.month.oct"), t("common.month.nov"), t("common.month.dec")];
 
@@ -94,15 +96,14 @@ async function loadChartData() {
     if (!chart) return;
 
     try {
-        const resp = await GetActivityByYear(chartYear.value);
-        if (!resp?.data?.length) return;
+        const resp = await GetActivityByYear(props.year);        
         await setChartData(resp);
     } catch (err) {
         console.error("Failed to load activity data:", err);
     }
 }
 
-watch(chartYear, loadChartData);
+watch(() => props.year, loadChartData);
 
 onMounted(() => {
     initChart();
@@ -112,22 +113,8 @@ onMounted(() => {
 
 <template>
     <section>
-        <h2>
-            <label>🗓️:</label>
-            <select v-model="chartYear">
-                <option v-for="year in [2026].sort((a, b) => b - a)" :key="year" :value="year">
-                    {{ year }}
-                </option>
-            </select>
-        </h2>
         <canvas ref="canvasRef"></canvas>
     </section>
 </template>
 
-<style lang="css" scoped>
-h2 {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-</style>
+<style lang="css" scoped></style>
