@@ -4,6 +4,12 @@
         "add": "Add"
     },
     "home": {},
+    "revenueTable": {
+        "title": {
+            "y": "Yearly Revenue",
+            "m": "Revenue by month"
+        }
+    },
     "revenueChart": {
         "title": "Revenue by date",
         "yAxis": "Revenue, €",

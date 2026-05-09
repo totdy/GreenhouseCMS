@@ -71,22 +71,18 @@ async function applyData(data: ActivitySeries[]) {
     if (!chart) return;
     await nextTick();
 
-    chart.data.datasets.splice(
-        0,
-        chart.data.datasets.length,
-        ...data.map((s) => {
-            const color = getCssVar("--primary");
-            return {
-                label: t(`addHarvest.type.${s.plant_type.toLowerCase()}`),
-                data: s.count,
-                borderColor: color,
-                backgroundColor: color,
-                borderWidth: 2,
-                fill: false,
-                tension: 0.3,
-            };
-        }),
-    );
+    chart.data.datasets = data.map((s) => {
+        const color = getCssVar("--primary");
+        return {
+            label: t(`addHarvest.type.${s.plant_type.toLowerCase()}`),
+            data: s.count,
+            borderColor: color,
+            backgroundColor: color,
+            borderWidth: 2,
+            fill: false,
+            tension: 0.3,
+        };
+    });
 
     chart.update();
 }
@@ -96,7 +92,7 @@ watch(
     (data) => {
         if (!chart) return;
         if (!data.length) {
-            chart.data.datasets.splice(0, chart.data.datasets.length);
+            chart.data.datasets = [];
             chart.update();
             return;
         }

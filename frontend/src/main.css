@@ -90,6 +90,10 @@ button {
     &:hover {
         background-image: var(--hover) !important;
     }
+
+    &.router-link-active, .router-link-exact-active {
+        background-color: var(--secondary);
+    }
 }
 
 input,

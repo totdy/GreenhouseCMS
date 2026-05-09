@@ -4,22 +4,18 @@ import Chart from "chart.js/auto";
 Chart.register(ChartDataLabels);
 
 import { nextTick, onMounted, ref, watch } from "vue";
-import { GetRevenueByDate } from "@/scripts/api";
 import type { RevenueByDateItem } from "@/scripts/types";
 
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const props = defineProps<{
-    year: number;
+    data: RevenueByDateItem[];
 }>();
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
 let chart: Chart | null = null;
-
-const EMPTY_LABELS = [""];
-const EMPTY_DATA = [0];
 
 function getCssVar(name: string): string {
     return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -34,11 +30,11 @@ function initChart() {
     chart = new Chart(canvasRef.value, {
         type: "line",
         data: {
-            labels: [...EMPTY_LABELS],
+            labels: [],
             datasets: [
                 {
                     label: t("revenueChart.title"),
-                    data: [...EMPTY_DATA],
+                    data: [],
                     borderColor: getCssVar("--primary"),
                     backgroundColor: getCssVar("--primary05"),
                     fill: true,
@@ -78,39 +74,33 @@ function initChart() {
     });
 }
 
-async function setChartData(labels: string[], values: number[]) {
+async function applyData(data: RevenueByDateItem[]) {
     if (!chart) return;
     await nextTick();
-    chart.data.labels!.splice(0, chart.data.labels!.length, ...labels);
-    (chart.data.datasets[0].data as number[]).splice(0, chart.data.datasets[0].data.length, ...values);
+
+    chart.data.labels = data.map((row) => row.date);
+    chart.data.datasets[0].data = data.map((row) => row.revenue);
+
     chart.update();
 }
 
-async function loadChartData(resetFirst = true) {
-    if (!chart) return;
-
-    if (resetFirst) {
-        await setChartData([...EMPTY_LABELS], [...EMPTY_DATA]);
-    }
-
-    try {
-        const resp = await GetRevenueByDate(props.year);
-        const data: RevenueByDateItem[] = resp?.data ?? [];
-        if (!data.length) return;
-        await setChartData(
-            data.map((row) => row.date),
-            data.map((row) => row.revenue),
-        );
-    } catch (err) {
-        console.error("Failed to load revenue data:", err);
-    }
-}
-
-watch(() => props.year, () => loadChartData(true));
+watch(
+    () => props.data,
+    (data) => {
+        if (!chart) return;
+        if (!data.length) {
+            chart.data.datasets[0].data = [];
+            chart.update();
+            return;
+        }
+        void applyData(data);
+    },
+    { deep: true },
+);
 
 onMounted(() => {
     initChart();
-    loadChartData(false);
+    if (props.data.length) void applyData(props.data);
 });
 </script>
 

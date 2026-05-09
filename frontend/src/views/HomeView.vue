@@ -2,15 +2,17 @@
 import RevenueChart from '@/components/RevenueChart.vue';
 import ActivityChart from '@/components/ActivityChart.vue';
 import ActivityTable from '@/components/ActivityTable.vue';
+import RevenueTable from '@/components/RevenueTable.vue';
 
-import { GetActivityByYear } from "@/scripts/api";
-import type { ActivitySeries } from "@/scripts/types";
+import { GetActivityByYear, GetRevenueByDate } from "@/scripts/api";
+import type { ActivitySeries, RevenueByDateItem } from "@/scripts/types";
 
 import { ref, watch } from 'vue';
 
 const chartYear = ref(new Date().getFullYear());
 
-const activityData = ref<ActivitySeries[]>([])
+const activityData = ref<ActivitySeries[]>([]);
+const revenueData = ref<RevenueByDateItem[]>([]);
 
 async function loadActivityData() {
   try {
@@ -21,7 +23,16 @@ async function loadActivityData() {
   }
 }
 
-watch(chartYear, loadActivityData, { immediate: true });
+async function loadRevenueData() {
+    try {
+        const resp = await GetRevenueByDate(chartYear.value);
+        revenueData.value = resp?.data ?? [];
+    } catch (err) {
+        console.error("Failed to load revenue data:", err);
+    }
+}
+
+watch(chartYear, ()=>{ loadActivityData(), loadRevenueData() }, { immediate: true });
 </script>
 
 <template>
@@ -35,8 +46,10 @@ watch(chartYear, loadActivityData, { immediate: true });
       </select>
     </h2>
   </section>
-
-  <RevenueChart :year="chartYear" />
+  <div>
+    <RevenueTable :data="revenueData" />
+    <RevenueChart :data="revenueData" />    
+  </div>
   <div>
     <ActivityChart :data="activityData" />
     <ActivityTable :data="activityData" />
@@ -56,8 +69,12 @@ div {
   grid-template-columns: 2fr 1fr;
   gap: 1rem;
 
+  &:nth-child(even){
+    grid-template-columns: 1fr 2fr;
+  }
+
   @media (max-width: 750px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 }
 </style>
