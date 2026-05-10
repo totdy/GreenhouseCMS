@@ -48,12 +48,12 @@ function initChart() {
             scales: {
                 x: {
                     ticks: { color: getCssVar("--text") },
-                    title: { color: getCssVar("--text"), display: true, text: t("revenueChart.xAxis") },
+                    title: { color: getCssVar("--text"), display: false, text: t("revenueChart.xAxis") },
                     grid: { color: getCssVar("--highlight") },
                 },
                 y: {
-                    ticks: { color: getCssVar("--text") },
-                    title: { color: getCssVar("--text"), display: true, text: t("revenueChart.yAxis") },
+                    ticks: { color: getCssVar("--text"), display: false },
+                    title: { color: getCssVar("--text"), display: false, text: t("revenueChart.yAxis") },
                     beginAtZero: true,
                     grid: { color: getCssVar("--highlight") },
                 },
@@ -78,7 +78,7 @@ async function applyData(data: RevenueByDateItem[]) {
     if (!chart) return;
     await nextTick();
 
-    chart.data.labels = data.map((row) => row.date);
+    chart.data.labels = data.map((row) => row.date.slice(5));
     chart.data.datasets[0].data = data.map((row) => row.revenue);
 
     chart.update();
@@ -105,10 +105,14 @@ onMounted(() => {
 </script>
 
 <template>
-    <section>
+    <section id="rc">
         <h2>{{ t("revenueChart.title") }}</h2>
         <canvas ref="canvasRef"></canvas>
     </section>
 </template>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+#rc {
+    grid-area: rc;
+}
+</style>

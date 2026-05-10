@@ -24,19 +24,19 @@ async function loadActivityData() {
 }
 
 async function loadRevenueData() {
-    try {
-        const resp = await GetRevenueByDate(chartYear.value);
-        revenueData.value = resp?.data ?? [];
-    } catch (err) {
-        console.error("Failed to load revenue data:", err);
-    }
+  try {
+    const resp = await GetRevenueByDate(chartYear.value);
+    revenueData.value = resp?.data ?? [];
+  } catch (err) {
+    console.error("Failed to load revenue data:", err);
+  }
 }
 
-watch(chartYear, ()=>{ loadActivityData(), loadRevenueData() }, { immediate: true });
+watch(chartYear, () => { loadActivityData(), loadRevenueData() }, { immediate: true });
 </script>
 
 <template>
-  <section class="controls">
+  <section>
     <h2>
       <label>🗓️:</label>
       <select v-model="chartYear">
@@ -48,16 +48,14 @@ watch(chartYear, ()=>{ loadActivityData(), loadRevenueData() }, { immediate: tru
   </section>
   <div>
     <RevenueTable :data="revenueData" />
-    <RevenueChart :data="revenueData" />    
-  </div>
-  <div>
+    <RevenueChart :data="revenueData" />
     <ActivityChart :data="activityData" />
     <ActivityTable :data="activityData" />
   </div>
 </template>
 
 <style lang="css" scoped>
-.controls h2 {
+h2 {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -66,15 +64,26 @@ watch(chartYear, ()=>{ loadActivityData(), loadRevenueData() }, { immediate: tru
 
 div {
   display: grid;
-  grid-template-columns: 2fr 1fr;
   gap: 1rem;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    "rty rc rc"
+    "rtm rc rc"
+    "ac  ac at"
+    "ac  ac at";
 
-  &:nth-child(even){
-    grid-template-columns: 1fr 2fr;
+  &>* {
+    min-width: 0;
+    min-height: 0;
   }
 
   @media (max-width: 750px) {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "rc  rc"
+      "rty rtm"
+      "ac  ac"
+      "at  at";
   }
 }
 </style>

@@ -21,22 +21,21 @@ watch(() => props.data, calculateRevenue, { deep: true, immediate: true });
 
 </script>
 <template>
-    <div class="panels">
-        <section>
-            <h2>{{ t('revenueTable.title.y') }}</h2>
-            <h1>€{{ yearlyRevenue }}</h1>
-        </section>
-        <section>
-            <h2>{{ t('revenueTable.title.m') }}</h2>
-            <h1>€{{ monthlyRevenue }}</h1>
-        </section>
-    </div>
+    <section id="rty">
+        <h2>{{ t('revenueTable.title.y') }}</h2>
+        <h1>€{{ yearlyRevenue }}</h1>
+    </section>
+    <section id="rtm">
+        <h2>{{ t('revenueTable.title.m') }}</h2>
+        <h1>€{{ monthlyRevenue }}</h1>
+    </section>
 </template>
 <style lang="css" scoped>
-.panels {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 1rem;
+#rty {
+    grid-area: rty;
+}
+
+#rtm {
+    grid-area: rtm;
 }
 </style>

@@ -40,14 +40,14 @@ function initChart() {
             animation: { duration: 600, easing: "easeInOutQuart" },
             scales: {
                 x: {
-                    ticks: { color: getCssVar("--text") },
-                    title: { color: getCssVar("--text"), display: true, text: t("activityChart.xAxis") },
+                    ticks: { color: getCssVar("--text")},
+                    title: { color: getCssVar("--text"), display: false, text: t("activityChart.xAxis") },
                     grid: { color: getCssVar("--highlight") },
                 },
                 y: {
                     beginAtZero: true,
-                    ticks: { color: getCssVar("--text") },
-                    title: { color: getCssVar("--text"), display: true, text: t("activityChart.yAxis") },
+                    ticks: { color: getCssVar("--text"), display: false },
+                    title: { color: getCssVar("--text"), display: false, text: t("activityChart.yAxis") },
                     grid: { color: getCssVar("--highlight") },
                 },
             },
@@ -108,10 +108,14 @@ onMounted(() => {
 </script>
 
 <template>
-    <section>
+    <section id="ac">
         <h2>{{ t("activityChart.title") }}</h2>
         <canvas ref="canvasRef"></canvas>
     </section>
 </template>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+#ac {
+    grid-area: ac;
+}
+</style>

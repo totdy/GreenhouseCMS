@@ -4,14 +4,14 @@ import type { ActivitySeries } from "@/scripts/types";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
-const props = defineProps<{    
+const props = defineProps<{
     data: ActivitySeries[]
 }>();
 
 </script>
 
 <template>
-    <section>
+    <section id="at">
         <h2>{{ t("activityTable.title") }}</h2>
         <ol>
             <li v-for="item in props.data" :key="item.plant_type">
@@ -26,6 +26,13 @@ const props = defineProps<{
 </template>
 
 <style lang="css" scoped>
+#at {
+    grid-area: at;
+
+    /* ???? */
+    min-width: 20rem;
+}
+
 ol {
     gap: 0.5rem;
 }
