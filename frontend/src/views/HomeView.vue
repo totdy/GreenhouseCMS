@@ -11,6 +11,9 @@ import { ref, watch } from 'vue';
 
 const chartYear = ref(new Date().getFullYear());
 
+const currentMonth = ref(new Date().getMonth());
+const currentYear = ref(new Date().getFullYear());
+
 const activityData = ref<ActivitySeries[]>([]);
 const revenueData = ref<RevenueByDateItem[]>([]);
 
@@ -47,7 +50,7 @@ watch(chartYear, () => { loadActivityData(), loadRevenueData() }, { immediate: t
     </h2>
   </section>
   <div>
-    <RevenueTable :data="revenueData" />
+    <RevenueTable :data="revenueData" :currentMonth=" chartYear===currentYear ? currentMonth+1 : 12" />
     <RevenueChart :data="revenueData" />
     <ActivityChart :data="activityData" />
     <ActivityTable :data="activityData" />

@@ -6,7 +6,8 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
 const props = defineProps<{
-    data: RevenueByDateItem[]
+    data: RevenueByDateItem[],
+    currentMonth: number
 }>();
 
 const yearlyRevenue = ref(0);
@@ -14,7 +15,7 @@ const monthlyRevenue = ref(0);
 
 function calculateRevenue() {
     yearlyRevenue.value = props.data.reduce((sum, item) => sum + item.revenue, 0);
-    monthlyRevenue.value = Math.round(yearlyRevenue.value / 12 * 100) / 100;
+    monthlyRevenue.value = Math.round(yearlyRevenue.value / props.currentMonth * 100) / 100;
 }
 
 watch(() => props.data, calculateRevenue, { deep: true, immediate: true });

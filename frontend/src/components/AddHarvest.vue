@@ -92,6 +92,8 @@ async function handleSubmit() {
                         <option value="Radish">{{ t("addHarvest.type.radish") }}</option>
                         <option value="Coriander">{{ t("addHarvest.type.coriander") }}</option>
                         <option value="Basil">{{ t("addHarvest.type.basil") }}</option>
+                        <option value="Bouquet">{{ t("addHarvest.type.bouquet") }}</option>
+                        <option value="Zucchini">{{ t("addHarvest.type.zucchini") }}</option>
                     </select>
                 </div>
                 <div>

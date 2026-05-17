@@ -7,7 +7,7 @@
     "revenueTable": {
         "title": {
             "y": "Yearly Revenue",
-            "m": "Revenue by month"
+            "m": "Avarage revenue by month"
         }
     },
     "revenueChart": {
@@ -68,7 +68,9 @@
             "mint": "🌿 Mint",
             "radish": "🍎 Radish",
             "coriander": "🌿 Coriander",
-            "basil": "💐 Basil"
+            "basil": "☘️ Basil",
+            "bouquet": "💐 Bouquet",
+            "zucchini": "🌵 Zucchini"
         },
         "count": {
             "title": "Count"

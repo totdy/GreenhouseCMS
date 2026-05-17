@@ -30,24 +30,25 @@ function initChart() {
     chart = null;
 
     chart = new Chart(canvasRef.value, {
-        type: "line",
+        type: "line",        
         data: {
             labels: [...MONTH_LABELS],
             datasets: [],
         },
         options: {
-            responsive: true,
+            responsive: true,            
             animation: { duration: 600, easing: "easeInOutQuart" },
             scales: {
                 x: {
+                    stacked: true,
                     ticks: { color: getCssVar("--text")},
-                    title: { color: getCssVar("--text"), display: false, text: t("activityChart.xAxis") },
+                    title: { display: false },
                     grid: { color: getCssVar("--highlight") },
                 },
                 y: {
                     beginAtZero: true,
-                    ticks: { color: getCssVar("--text"), display: false },
-                    title: { color: getCssVar("--text"), display: false, text: t("activityChart.yAxis") },
+                    ticks: { display: false },
+                    title: { display: false },
                     grid: { color: getCssVar("--highlight") },
                 },
             },
