@@ -4,8 +4,8 @@ import ActivityChart from '@/components/ActivityChart.vue';
 import ActivityTable from '@/components/ActivityTable.vue';
 import RevenueTable from '@/components/RevenueTable.vue';
 
-import { GetActivityByYear, GetRevenueByDate } from "@/scripts/api";
-import type { ActivitySeries, RevenueByDateItem } from "@/scripts/types";
+import { GetActivityByYear, GetRevenueByYear } from "@/scripts/api";
+import type { YearlyActivityItem, YearlyRevenueItem } from "@/scripts/types";
 
 import { ref, watch } from 'vue';
 
@@ -14,8 +14,8 @@ const chartYear = ref(new Date().getFullYear());
 const currentMonth = ref(new Date().getMonth());
 const currentYear = ref(new Date().getFullYear());
 
-const activityData = ref<ActivitySeries[]>([]);
-const revenueData = ref<RevenueByDateItem[]>([]);
+const activityData = ref<YearlyActivityItem[]>([]);
+const revenueData = ref<YearlyRevenueItem[]>([]);
 
 async function loadActivityData() {
   try {
@@ -28,7 +28,7 @@ async function loadActivityData() {
 
 async function loadRevenueData() {
   try {
-    const resp = await GetRevenueByDate(chartYear.value);
+    const resp = await GetRevenueByYear(chartYear.value);
     revenueData.value = resp?.data ?? [];
   } catch (err) {
     console.error("Failed to load revenue data:", err);
@@ -51,8 +51,8 @@ watch(chartYear, () => { loadActivityData(), loadRevenueData() }, { immediate: t
   </section>
   <div>
     <RevenueTable :data="revenueData" :currentMonth=" chartYear===currentYear ? currentMonth+1 : 12" />
-    <RevenueChart :data="revenueData" />
-    <ActivityChart :data="activityData" />
+    <RevenueChart :data="revenueData" :year="chartYear" />
+    <ActivityChart :data="activityData" :year="chartYear" />
     <ActivityTable :data="activityData" />
   </div>
 </template>

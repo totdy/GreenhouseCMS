@@ -3,24 +3,45 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import Chart from "chart.js/auto";
 Chart.register(ChartDataLabels);
 
-import { nextTick, onMounted, ref, watch } from "vue";
-import type { ActivitySeries } from "@/scripts/types";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
+import type { MonthlyActivityItem, YearlyActivityItem } from "@/scripts/types";
+import { GetActivityByMonth } from "@/scripts/api";
+import { PLANT_LIST } from "@/scripts/plants";
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
+const MONTH_LABELS = [t("common.month.jan"), t("common.month.feb"), t("common.month.mar"), t("common.month.apr"), t("common.month.may"), t("common.month.jun"), t("common.month.jul"), t("common.month.aug"), t("common.month.sep"), t("common.month.oct"), t("common.month.nov"), t("common.month.dec")];
+
 const props = defineProps<{
-    data: ActivitySeries[];
+    data: YearlyActivityItem[];
+    year: number;
 }>();
 
+const selectedPlant = ref(PLANT_LIST[0]);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
 let chart: Chart | null = null;
 
-const MONTH_LABELS = [t("common.month.jan"), t("common.month.feb"), t("common.month.mar"), t("common.month.apr"), t("common.month.may"), t("common.month.jun"), t("common.month.jul"), t("common.month.aug"), t("common.month.sep"), t("common.month.oct"), t("common.month.nov"), t("common.month.dec")];
+const selectedMonth = ref<{ label: string; entries: MonthlyActivityItem[] } | null>(null);
+const loadingMonth = ref(false);
+
+const chartLabel = computed(() =>
+    t(`addHarvest.type.${selectedPlant.value.toLowerCase()}`)
+);
 
 function getCssVar(name: string): string {
     return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function monthlyCounts(data: YearlyActivityItem[], plant: string): number[] {
+    const buckets = Array(12).fill(0);
+    for (const row of data) {
+        if (row.plant_type === plant) {
+            buckets[row.month - 1] += row.count;
+        }
+    }
+    return buckets;
 }
 
 function initChart() {
@@ -30,33 +51,69 @@ function initChart() {
     chart = null;
 
     chart = new Chart(canvasRef.value, {
-        type: "line",        
+        type: "line",
         data: {
             labels: [...MONTH_LABELS],
-            datasets: [],
+            datasets: [
+                {
+                    label: chartLabel.value,
+                    data: Array(12).fill(0),
+                    borderColor: getCssVar("--primary"),
+                    backgroundColor: getCssVar("--primary05"),
+                    fill: true,
+                    tension: 0.3,
+                    pointHoverRadius: 8,
+                    pointHitRadius: 16,
+                },
+            ],
         },
         options: {
-            responsive: true,            
+            responsive: true,
             animation: { duration: 600, easing: "easeInOutQuart" },
+            layout: { padding: { top: 24 } },
+            onClick: async (_e, elements) => {
+                if (!elements.length) {
+                    selectedMonth.value = null;
+                    return;
+                }
+                const monthIndex = elements[0].index;
+                const month = monthIndex + 1;
+                loadingMonth.value = true;
+                try {
+                    const resp = await GetActivityByMonth(props.year, month);
+                    const entries = resp.data.filter(
+                        (row) => row.plant_type === selectedPlant.value
+                    );
+                    selectedMonth.value = {
+                        label: MONTH_LABELS[monthIndex] || "",
+                        entries,
+                    };
+                } catch {
+                    selectedMonth.value = null;
+                } finally {
+                    loadingMonth.value = false;
+                }
+            },
             scales: {
                 x: {
-                    stacked: true,
-                    ticks: { color: getCssVar("--text")},
-                    title: { display: false },
+                    ticks: { color: getCssVar("--text") },
+                    title: { color: getCssVar("--text"), display: false, text: t("activityChart.xAxis") },
                     grid: { color: getCssVar("--highlight") },
                 },
                 y: {
+                    ticks: { color: getCssVar("--text"), display: false },
+                    title: { color: getCssVar("--text"), display: false, text: t("activityChart.yAxis") },
                     beginAtZero: true,
-                    ticks: { display: false },
-                    title: { display: false },
                     grid: { color: getCssVar("--highlight") },
                 },
             },
             plugins: {
                 datalabels: {
+                    anchor: "end",
+                    align: "top",
                     clip: false,
                     color: getCssVar("--text"),
-                    font: { size: 10 },
+                    font: { size: 11 },
                     display: (ctx) => (ctx.dataset.data[ctx.dataIndex] as number) > 0,
                     formatter: (value: number) => value,
                 },
@@ -68,55 +125,113 @@ function initChart() {
     });
 }
 
-async function applyData(data: ActivitySeries[]) {
+async function applyData() {
     if (!chart) return;
     await nextTick();
 
-    chart.data.datasets = data.map((s) => {
-        const color = getCssVar("--primary");
-        return {
-            label: t(`addHarvest.type.${s.plant_type.toLowerCase()}`),
-            data: s.count,
-            borderColor: color,
-            backgroundColor: color,
-            borderWidth: 2,
-            fill: false,
-            tension: 0.3,
-        };
-    });
+    chart.data.datasets[0].label = chartLabel.value;
+    (chart.data.datasets[0].data as number[]).splice(
+        0, 12, ...monthlyCounts(props.data, selectedPlant.value)
+    );
 
     chart.update();
 }
 
 watch(
-    () => props.data,
-    (data) => {
+    () => [props.data, selectedPlant.value] as const,
+    ([data]) => {
         if (!chart) return;
+        selectedMonth.value = null;
         if (!data.length) {
-            chart.data.datasets = [];
+            (chart.data.datasets[0].data as number[]).fill(0);
             chart.update();
             return;
         }
-        void applyData(data);
+        void applyData();
     },
     { deep: true },
 );
 
 onMounted(() => {
     initChart();
-    if (props.data.length) void applyData(props.data);
+    if (props.data.length) void applyData();
 });
 </script>
 
 <template>
     <section id="ac">
         <h2>{{ t("activityChart.title") }}</h2>
+        <label>
+            {{ t("addHarvest.type.title") }}
+            <select v-model="selectedPlant">
+                <option v-for="plant in PLANT_LIST" :key="plant" :value="plant">
+                    {{ t(`addHarvest.type.${plant.toLowerCase()}`) }}
+                </option>
+            </select>
+        </label>
         <canvas ref="canvasRef"></canvas>
+
+        <div v-if="selectedMonth || loadingMonth" class="popup">
+            <div class="popup-header">
+                <span>{{ selectedMonth?.label ?? "..." }}</span>
+                <button @click="selectedMonth = null" :disabled="loadingMonth">✕</button>
+            </div>
+            <ul v-if="selectedMonth">
+                <li v-for="entry in selectedMonth.entries" :key="entry.date">
+                    <span>{{ entry.date }}</span>
+                    <span>{{ entry.count }}</span>
+                </li>
+            </ul>
+        </div>
     </section>
 </template>
 
 <style lang="css" scoped>
 #ac {
     grid-area: ac;
+    position: relative;
+}
+
+label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.popup {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+
+    min-width: 220px;
+
+    background: var(--bg-light);
+    border: 1px solid var(--highlight);
+    border-radius: 0.5rem;
+
+    padding: 0.75rem;
+
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+
+    button {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
 }
 </style>

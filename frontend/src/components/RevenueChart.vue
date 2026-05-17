@@ -4,7 +4,8 @@ import Chart from "chart.js/auto";
 Chart.register(ChartDataLabels);
 
 import { nextTick, onMounted, ref, watch } from "vue";
-import type { RevenueByDateItem } from "@/scripts/types";
+import type { MonthlyRevenueItem, YearlyRevenueItem } from "@/scripts/types";
+import { GetRevenueByMonth } from "@/scripts/api";
 
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
@@ -12,24 +13,25 @@ const { t } = useI18n()
 const MONTH_LABELS = [t("common.month.jan"), t("common.month.feb"), t("common.month.mar"), t("common.month.apr"), t("common.month.may"), t("common.month.jun"), t("common.month.jul"), t("common.month.aug"), t("common.month.sep"), t("common.month.oct"), t("common.month.nov"), t("common.month.dec")];
 
 const props = defineProps<{
-    data: RevenueByDateItem[];
+    data: YearlyRevenueItem[];
+    year: number;
 }>();
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
 let chart: Chart | null = null;
 
-const selectedMonth = ref<{ label: string; entries: RevenueByDateItem[] } | null>(null);
+const selectedMonth = ref<{ label: string; entries: MonthlyRevenueItem[] } | null>(null);
+const loadingMonth = ref(false);
 
 function getCssVar(name: string): string {
     return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
-function groupByMonth(data: RevenueByDateItem[]): number[] {
+function monthlyTotals(data: YearlyRevenueItem[]): number[] {
     const buckets = Array(12).fill(0);
     for (const row of data) {
-        const month = new Date(row.date).getMonth();
-        buckets[month] += row.revenue;
+        buckets[row.month - 1] += row.revenue;
     }
     return buckets;
 }
@@ -61,19 +63,25 @@ function initChart() {
             responsive: true,
             animation: { duration: 600, easing: "easeInOutQuart" },
             layout: { padding: { top: 24 } },
-            onClick: (_e, elements) => {
+            onClick: async (_e, elements) => {
                 if (!elements.length) {
                     selectedMonth.value = null;
                     return;
                 }
                 const monthIndex = elements[0].index;
-                const entries = props.data.filter(
-                    (row) => new Date(row.date).getMonth() === monthIndex
-                );
-                selectedMonth.value = {
-                    label: MONTH_LABELS[monthIndex] || "",
-                    entries,
-                };
+                const month = monthIndex + 1;
+                loadingMonth.value = true;
+                try {
+                    const resp = await GetRevenueByMonth(props.year, month);
+                    selectedMonth.value = {
+                        label: MONTH_LABELS[monthIndex] || "",
+                        entries: resp.data,
+                    };
+                } catch {
+                    selectedMonth.value = null;
+                } finally {
+                    loadingMonth.value = false;
+                }
             },
             scales: {
                 x: {
@@ -106,12 +114,12 @@ function initChart() {
     });
 }
 
-async function applyData(data: RevenueByDateItem[]) {
+async function applyData(data: YearlyRevenueItem[]) {
     if (!chart) return;
     await nextTick();
 
     (chart.data.datasets[0].data as number[]).splice(
-        0, 12, ...groupByMonth(data)
+        0, 12, ...monthlyTotals(data)
     );
 
     chart.update();
@@ -121,6 +129,7 @@ watch(
     () => props.data,
     (data) => {
         if (!chart) return;
+        selectedMonth.value = null;
         if (!data.length) {
             (chart.data.datasets[0].data as number[]).fill(0);
             chart.update();
@@ -142,12 +151,12 @@ onMounted(() => {
         <h2>{{ t("revenueChart.title") }}</h2>
         <canvas ref="canvasRef"></canvas>
 
-        <div v-if="selectedMonth" class="popup">
+        <div v-if="selectedMonth || loadingMonth" class="popup">
             <div class="popup-header">
-                <span>{{ selectedMonth.label }}</span>
-                <button @click="selectedMonth = null">✕</button>
+                <span>{{ selectedMonth?.label ?? "..." }}</span>
+                <button @click="selectedMonth = null" :disabled="loadingMonth">✕</button>
             </div>
-            <ul>
+            <ul v-if="selectedMonth">
                 <li v-for="entry in selectedMonth.entries" :key="entry.date">
                     <span>{{ entry.date }}</span>
                     <span>€{{ entry.revenue.toLocaleString() }}</span>

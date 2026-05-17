@@ -1,9 +1,11 @@
 from sqlalchemy import create_engine, extract, select, update, func
 from sqlalchemy.orm import sessionmaker
 
-from src.schemas import HarvestPayload, HarvestIn, RevenueByDateItem, HarvestOut
+from src.schemas import HarvestPayload, HarvestIn, YearlyActivityItem, YearlyRevenueItem, HarvestOut, MonthlyRevenueItem, MonthlyActivityItem
 
 from src.models import Harvests
+
+import calendar
 
 engine = create_engine(url="sqlite:///greenhouse.db")
 
@@ -22,7 +24,6 @@ def AddHarvest(payload: HarvestPayload) -> None:
                 date = item.date,
                 plant_type = item.plant_type,
                 count = item.count,
-                count_unit = item.count_unit,
                 unit_price = item.unit_price,
             )
             new_session.add(new_entry)
@@ -37,7 +38,6 @@ def UpdateHarvest(id: int, payload: HarvestIn) -> None:
                 date = payload.date,
                 plant_type = payload.plant_type,
                 count = payload.count,
-                count_unit = payload.count_unit,
                 unit_price = payload.unit_price,
             )
         )
@@ -58,32 +58,62 @@ def GetHarvestsAll(page: int = 1) -> tuple[list[HarvestOut], int]:
         rows = result.scalars().all() # type: ignore
         return rows, total # type: ignore
 
-def GetRevenueByDate(year: int) -> list[RevenueByDateItem]:
+def GetYearlyRevenue(year: int) -> list[YearlyRevenueItem]:
     with session() as new_session:
         query = (
             select(
-                Harvests.date,
-                func.round(func.sum(Harvests.count * Harvests.unit_price), 2).label("revenue"),
+                extract('month', Harvests.date).label("month"),
+                func.round(func.sum(Harvests.count * Harvests.unit_price), 2).label("revenue")
             )
             .filter(Harvests.date.between(f"{year}-01-01", f"{year}-12-31"))
+            .group_by(extract('month', Harvests.date))
+            .order_by(extract('month', Harvests.date))
+        )
+        result = new_session.execute(query)
+        return result.all() # type: ignore
+
+def GetMonthlyRevenue(year: int, month: int) -> list[MonthlyRevenueItem]:
+    with session() as new_session:
+        last_day = calendar.monthrange(year, month)[1]
+        query = (
+            select(
+                Harvests.date,
+                func.round(func.sum(Harvests.count * Harvests.unit_price), 2).label("revenue")
+            )
+            .filter(Harvests.date.between(f"{year}-{month:02d}-01", f"{year}-{month:02d}-{last_day:02d}"))
             .group_by(Harvests.date)
             .order_by(Harvests.date)
         )
         result = new_session.execute(query)
         return result.all() # type: ignore
 
-def GetActivityByYear(year: int):
+def GetYearlyActivity(year: int) -> list[YearlyActivityItem]:
     with session() as new_session:
         query = (
             select(
                 extract('month', Harvests.date).label("month"),
-                Harvests.plant_type,             
-                func.sum(Harvests.count).label("count"),
-                Harvests.count_unit
+                Harvests.plant_type,
+                func.sum(Harvests.count).label("count")
             )
             .filter(Harvests.date.between(f"{year}-01-01", f"{year}-12-31"))
-            .group_by(extract('month', Harvests.date), Harvests.plant_type, Harvests.count_unit)
+            .group_by(extract('month', Harvests.date), Harvests.plant_type)
             .order_by(extract('month', Harvests.date))
+        )
+        result = new_session.execute(query)
+        return result.all() # type: ignore
+
+def GetMonthlyActivity(year: int, month: int) -> list[MonthlyActivityItem]:
+    with session() as new_session:
+        last_day = calendar.monthrange(year, month)[1]
+        query = (
+            select(
+                Harvests.date,
+                Harvests.plant_type,
+                func.sum(Harvests.count).label("count")
+            )
+            .filter(Harvests.date.between(f"{year}-{month:02d}-01", f"{year}-{month:02d}-{last_day:02d}"))
+            .group_by(Harvests.date, Harvests.plant_type)
+            .order_by(Harvests.date)
         )
         result = new_session.execute(query)
         return result.all() # type: ignore

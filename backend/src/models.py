@@ -13,6 +13,5 @@ class Harvests(Base):
     date: Mapped[date] = mapped_column(Date)    
     plant_type: Mapped[str] = mapped_column(String)
     count: Mapped[float] = mapped_column(Numeric(10, 2))
-    count_unit: Mapped[str] = mapped_column(String)
     unit_price: Mapped[float] = mapped_column(Numeric(10, 4))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))

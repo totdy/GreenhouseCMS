@@ -1,1 +1,17 @@
 Generic single-database configuration.
+
+# Sync dependencies first (if you haven't already)
+uv sync
+
+# Run all pending migrations (upgrade to latest)
+uv run alembic upgrade head
+
+# Auto-generate from model changes
+uv run alembic revision --autogenerate -m "your_description_here"
+
+
+# Other useful commands:
+uv run alembic upgrade +1        # apply next migration only
+uv run alembic downgrade -1      # roll back one migration
+uv run alembic current           # show current revision
+uv run alembic history           # list all migrations

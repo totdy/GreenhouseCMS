@@ -25,8 +25,8 @@ GreenhouseCMS/
 │       ├── main.css
 │       ├── App.vue
 │       ├── views/
-│       │   ├── HomeView.vue      # Dashboard: revenue + activity charts/tables
-│       │   └── HarvestView.vue   # Harvest list / add / edit flows
+│       │   ├── HomeView.vue      # Dashboard: year selector, revenue + activity charts/tables
+│       │   └── HarvestView.vue   # Harvest list / add flows
 │       ├── components/
 │       │   ├── ActivityChart.vue / ActivityTable.vue
 │       │   ├── RevenueChart.vue / RevenueTable.vue
@@ -34,9 +34,10 @@ GreenhouseCMS/
 │       │   ├── PopUp.vue / ThemeToggle.vue / LocalizationSelect.vue
 │       └── scripts/
 │           ├── api.ts         # fetch() to FastAPI (BASE_URL in file)
-│           ├── types.ts       # Shared TS types aligned with API payloads
+│           ├── types.ts       # TS types aligned with API payloads; uses PlantType from plants.ts
+│           ├── plants.ts      # PLANT_TYPES registry (name → unit); single source for plant list
 │           ├── router.ts      # `/` home, `/harvest` lazy-loaded harvest view
-│           └── useHarvest.ts  # Harvest-related composable logic
+│           └── useHarvest.ts  # Paginated harvest list composable
 │       └── localization/
 │           ├── index.ts
 │           ├── en.json
@@ -87,15 +88,66 @@ Runtime database file: `sqlite:///greenhouse.db` (created beside the process wor
 | **Database** | SQLite (`greenhouse.db`) |
 | **Dependency lock** | uv (`uv.lock`) |
 
-## Backend API (summary)
+## Plant registry (`frontend/src/scripts/plants.ts`)
 
-- `POST /harvests` — bulk insert (`HarvestPayload`)
-- `PUT /harvests/{id}` — update one harvest
-- `GET /harvests/all/{page}` — paginated list (15 per page)
-- `GET /revenue-by-date/{year}` — daily revenue aggregates
-- `GET /activity/{year}` — monthly totals pivoted by plant type
+All supported plant types and their display units live in one object. **Do not** duplicate plant names in components.
 
-CORS is open (`allow_origins=["*"]`) for local/dev use. The frontend API base URL is set in `frontend/src/scripts/api.ts` (currently a LAN IP — change for your environment).
+```ts
+export const PLANT_TYPES = {
+  Tomato: { unit: "kg" },
+  Tomatocherry: { unit: "box" },
+  // ...
+} as const
+
+export type PlantType = keyof typeof PLANT_TYPES
+export const PLANT_LIST = Object.keys(PLANT_TYPES) as PlantType[]
+export function isPlantType(value: string): value is PlantType
+export function getPlantUnit(plant: PlantType): CountUnit
+```
+
+**Adding a plant** requires:
+
+1. Entry in `PLANT_TYPES` (key = API `plant_type` string, e.g. `Tomatocherry`).
+2. i18n labels in `en.json` and `ua.json` under `addHarvest.type.<lowercase>` (e.g. `tomatocherry`).
+
+Units (`kg` | `box` | `bunch`) are **frontend-only**; the backend stores `plant_type`, `count`, and `unit_price` but not `count_unit`. UI resolves units via `getPlantUnit(plant_type)`.
+
+`types.ts` imports `PlantType` for harvest and activity shapes.
+
+## Backend API
+
+| Method | Path | Response wrapper | Notes |
+|--------|------|------------------|-------|
+| `POST` | `/harvests` | `{ success, inserted }` | Body: `{ data: HarvestIn[] }` |
+| `PUT` | `/harvests/{id}` | `{ success }` | Single harvest update |
+| `GET` | `/harvests/all/{page}` | `HarvestsAllResponse` | 15 rows per page |
+| `GET` | `/revenue-by/{year}` | `{ data: YearlyRevenueItem[] }` | `{ month, revenue }` per row |
+| `GET` | `/revenue-by/{year}/{month}` | `{ data: MonthlyRevenueItem[] }` | `{ date, revenue }` per day |
+| `GET` | `/activity/{year}` | `{ data: YearlyActivityItem[] }` | `{ month, plant_type, count }` |
+| `GET` | `/activity/{year}/{month}` | `{ data: MonthlyActivityItem[] }` | `{ date, plant_type, count }` per day |
+
+**Harvest fields** (`HarvestIn` / DB): `date`, `plant_type`, `count`, `unit_price`.
+
+CORS is open (`allow_origins=["*"]`) for local/dev. The frontend API base URL is set in `frontend/src/scripts/api.ts` (currently a LAN IP — change for your environment).
+
+## Frontend dashboard (`HomeView.vue`)
+
+- Loads yearly revenue and activity for the selected year via `GetRevenueByYear` / `GetActivityByYear`.
+- Passes `year` into chart components for month drill-down.
+
+**RevenueChart** — single line chart of 12 monthly totals; click a month → `GetRevenueByMonth(year, month)` → popup with daily revenue.
+
+**ActivityChart** — single line chart for one selected plant (`PLANT_LIST` select); click a month → `GetActivityByMonth(year, month)` → popup filtered to that plant’s daily counts.
+
+**RevenueTable** — yearly sum and average monthly revenue.
+
+**ActivityTable** — yearly totals per plant (aggregation logic lives in the component); units from `getPlantUnit`.
+
+Keep chart/table **transform logic inside components**, not in `types.ts` helpers.
+
+## Frontend API client (`api.ts`)
+
+Exported functions mirror backend routes: `AddHarvests`, `GetHarvestsAll`, `GetRevenueByYear`, `GetRevenueByMonth`, `GetActivityByYear`, `GetActivityByMonth`.
 
 ## Common commands
 

@@ -1,8 +1,9 @@
+import type { PlantType } from "./plants"
+
 export interface HarvestIn {
   date: string
-  plant_type: string
+  plant_type: PlantType
   count: number
-  count_unit: string
   unit_price: number
 }
 
@@ -15,23 +16,42 @@ export interface HarvestPayload {
   data: HarvestIn[]
 }
 
-export interface ActivitySeries {
-  plant_type: string
-  count: number[]
-  count_unit: string
+export interface YearlyRevenueItem {
+  month: number
+  revenue: number
 }
 
-export interface ActivityPivotResponse {
-  data: ActivitySeries[]
+export interface YearlyRevenueList {
+  data: YearlyRevenueItem[]
 }
 
-export interface RevenueByDateItem {
+export interface MonthlyRevenueItem {
   date: string
   revenue: number
 }
 
-export interface RevenueByDateResponse {
-  data: RevenueByDateItem[]
+export interface MonthlyRevenueList {
+  data: MonthlyRevenueItem[]
+}
+
+export interface YearlyActivityItem {
+  month: number
+  plant_type: PlantType
+  count: number
+}
+
+export interface YearlyActivityList {
+  data: YearlyActivityItem[]
+}
+
+export interface MonthlyActivityItem {
+  date: string
+  plant_type: PlantType
+  count: number
+}
+
+export interface MonthlyActivityList {
+  data: MonthlyActivityItem[]
 }
 
 export interface HarvestsAllResponse {

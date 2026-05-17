@@ -5,7 +5,6 @@ class HarvestIn(BaseModel):
     date: date
     plant_type: str
     count: float
-    count_unit: str
     unit_price: float
 
 class HarvestOut(HarvestIn):
@@ -15,23 +14,38 @@ class HarvestOut(HarvestIn):
 class HarvestPayload(BaseModel):
     data: list[HarvestIn]
 
-class RevenueByDateItem(BaseModel):
-    date: date
+class YearlyRevenueItem(BaseModel):
+    month: int
     revenue: float
     
-class RevenueByDateResponse(BaseModel):
-    data: list[RevenueByDateItem]
+class YearlyRevenueList(BaseModel):
+    data: list[YearlyRevenueItem]
 
-class ActivitySeries(BaseModel):
+class YearlyActivityItem(BaseModel):    
+    month: int
     plant_type: str
-    count: list[float]
-    count_unit: str
+    count: float    
 
-class ActivityPivotResponse(BaseModel):
-    data: list[ActivitySeries]
+class YearlyActivityList(BaseModel):
+    data: list[YearlyActivityItem]
 
 class HarvestsAllResponse(BaseModel):
     data: list[HarvestOut]
     total: int
     page: int
     total_pages: int
+
+class MonthlyRevenueItem(BaseModel):
+    date: date
+    revenue: float
+
+class MonthlyRevenueList(BaseModel):
+    data: list[MonthlyRevenueItem]
+
+class MonthlyActivityItem(BaseModel):    
+    date: date
+    plant_type: str
+    count: float   
+
+class MonthlyActivityList(BaseModel):
+    data: list[MonthlyActivityItem]

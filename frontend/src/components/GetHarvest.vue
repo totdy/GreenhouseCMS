@@ -2,6 +2,7 @@
 import { onMounted } from "vue"
 
 import { useHarvest } from "@/scripts/useHarvest"
+import { getPlantUnit } from "@/scripts/plants"
 
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
@@ -22,7 +23,7 @@ onMounted(() => loadPage(1))
     <ul v-show="harvests.length" :style="{ opacity: loadingHarvests ? 0.4 : 1 }">
       <li v-for="item in harvests" :key="item.id">
         <p>{{ t(`addHarvest.type.${item.plant_type.toLowerCase()}`) }}</p>
-        <p>{{ item.count }} {{ t(`addHarvest.unit.${item.count_unit.toLowerCase()}`) }}</p>
+        <p>{{ item.count }} {{ t(`addHarvest.unit.${getPlantUnit(item.plant_type).toLowerCase()}`) }}</p>
         <p>€{{ item.unit_price.toFixed(2) }}/{{ t("addHarvest.unit.title") }}</p>
         <p>{{ formatDate(item.date) }}</p>
       </li>

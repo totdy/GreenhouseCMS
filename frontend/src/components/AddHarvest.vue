@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { nextTick, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import type { HarvestIn } from "@/scripts/types"
 import { AddHarvests } from "@/scripts/api"
 import { useHarvest } from "@/scripts/useHarvest"
+import { PLANT_LIST } from "@/scripts/plants"
 
 import { useI18n } from 'vue-i18n'
 import PopUp from "./PopUp.vue"
@@ -24,7 +25,6 @@ const createEmptyRow = (): HarvestIn => ({
     date: globalDate.value,
     plant_type: "",
     count: 0,
-    count_unit: "",
     unit_price: 0,
 })
 
@@ -69,7 +69,6 @@ async function handleSubmit() {
             <div class="rows">
                 <label>{{ t("addHarvest.type.title") }}</label>
                 <label>{{ t("addHarvest.count.title") }}</label>
-                <label>{{ t("addHarvest.unit.title") }}</label>
                 <label>{{ t("addHarvest.price.title") }}</label>
                 <label><button type="button" @click="addRow">{{ t("addHarvest.btn.add") }}</button></label>
             </div>
@@ -78,41 +77,20 @@ async function handleSubmit() {
                 <div>
                     <select v-model.lazy="row.plant_type" required>
                         <option value="" selected disabled></option>
-                        <option value="Tomato">{{ t("addHarvest.type.tomato") }}</option>
-                        <option value="Cucumber">{{ t("addHarvest.type.cucumber") }}</option>
-                        <option value="Bellpepper">{{ t("addHarvest.type.bellpepper") }}</option>
-                        <option value="Garlic">{{ t("addHarvest.type.garlic") }}</option>
-                        <option value="Dill">{{ t("addHarvest.type.dill") }}</option>
-                        <option value="Onion">{{ t("addHarvest.type.onion") }}</option>
-                        <option value="Parsley">{{ t("addHarvest.type.parsley") }}</option>
-                        <option value="Eggplant">{{ t("addHarvest.type.eggplant") }}</option>
-                        <option value="Lovage">{{ t("addHarvest.type.lovage") }}</option>
-                        <option value="Sorrel">{{ t("addHarvest.type.sorrel") }}</option>
-                        <option value="Mint">{{ t("addHarvest.type.mint") }}</option>
-                        <option value="Radish">{{ t("addHarvest.type.radish") }}</option>
-                        <option value="Coriander">{{ t("addHarvest.type.coriander") }}</option>
-                        <option value="Basil">{{ t("addHarvest.type.basil") }}</option>
-                        <option value="Bouquet">{{ t("addHarvest.type.bouquet") }}</option>
-                        <option value="Zucchini">{{ t("addHarvest.type.zucchini") }}</option>
+                        <option v-for="plant in PLANT_LIST" :key="plant" :value="plant">
+                            {{ t(`addHarvest.type.${plant.toLowerCase()}`) }}
+                        </option>
                     </select>
                 </div>
                 <div>
                     <input v-model.number="row.count" type="number" step="0.1" min="0" required />
                 </div>
                 <div>
-                    <select v-model.lazy="row.count_unit" required>
-                        <option disabled value="">{{ t("addHarvest.unit.title") }}</option>
-                        <option value="kg">{{ t("addHarvest.unit.kg") }}</option>
-                        <option value="box">{{ t("addHarvest.unit.box") }}</option>
-                        <option value="bunch">{{ t("addHarvest.unit.bunch") }}</option>
-                    </select>
-                </div>
-                <div>
                     <input v-model.number="row.unit_price" type="number" step="0.05" min="0" required />
                 </div>
                 <div>
                     <button class="remove" type="button" @click="removeRow(index)">{{ t("addHarvest.btn.remove")
-                        }}</button>
+                    }}</button>
                 </div>
             </div>
 
@@ -146,7 +124,7 @@ form {
 
 .rows {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+    grid-template-columns: 1fr 1fr 1fr auto;
     gap: 1rem;
 
     border-bottom: 1px solid var(--bg2);

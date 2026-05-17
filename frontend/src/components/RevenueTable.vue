@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import type { RevenueByDateItem } from '@/scripts/types';
+import type { YearlyRevenueItem } from '@/scripts/types';
 import { ref, watch } from 'vue';
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
 const props = defineProps<{
-    data: RevenueByDateItem[],
+    data: YearlyRevenueItem[],
     currentMonth: number
 }>();
 
