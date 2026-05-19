@@ -6,7 +6,7 @@ Chart.register(ChartDataLabels);
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import type { MonthlyActivityItem, YearlyActivityItem } from "@/scripts/types";
 import { GetActivityByMonth } from "@/scripts/api";
-import { PLANT_LIST } from "@/scripts/plants";
+import { DEFAULT_PLANT, PLANT_LIST, type PlantType } from "@/scripts/plants";
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
@@ -18,7 +18,7 @@ const props = defineProps<{
     year: number;
 }>();
 
-const selectedPlant = ref(PLANT_LIST[0]);
+const selectedPlant = ref<PlantType>(DEFAULT_PLANT);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
 let chart: Chart | null = null;
@@ -72,11 +72,12 @@ function initChart() {
             animation: { duration: 600, easing: "easeInOutQuart" },
             layout: { padding: { top: 24 } },
             onClick: async (_e, elements) => {
-                if (!elements.length) {
+                const element = elements[0];
+                if (!element) {
                     selectedMonth.value = null;
                     return;
                 }
-                const monthIndex = elements[0].index;
+                const monthIndex = element.index;
                 const month = monthIndex + 1;
                 loadingMonth.value = true;
                 try {
@@ -129,8 +130,11 @@ async function applyData() {
     if (!chart) return;
     await nextTick();
 
-    chart.data.datasets[0].label = chartLabel.value;
-    (chart.data.datasets[0].data as number[]).splice(
+    const dataset = chart.data.datasets[0];
+    if (!dataset) return;
+
+    dataset.label = chartLabel.value;
+    (dataset.data as number[]).splice(
         0, 12, ...monthlyCounts(props.data, selectedPlant.value)
     );
 
@@ -143,7 +147,8 @@ watch(
         if (!chart) return;
         selectedMonth.value = null;
         if (!data.length) {
-            (chart.data.datasets[0].data as number[]).fill(0);
+            const dataset = chart.data.datasets[0];
+            if (dataset) (dataset.data as number[]).fill(0);
             chart.update();
             return;
         }

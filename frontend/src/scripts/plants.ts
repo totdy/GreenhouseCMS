@@ -24,6 +24,8 @@ export type PlantType = keyof typeof PLANT_TYPES
 
 export const PLANT_LIST = Object.keys(PLANT_TYPES) as PlantType[]
 
+export const DEFAULT_PLANT: PlantType = "Cucumber"
+
 export function isPlantType(value: string): value is PlantType {
   return value in PLANT_TYPES
 }

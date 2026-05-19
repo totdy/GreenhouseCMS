@@ -7,7 +7,7 @@ import type {
   MonthlyActivityList,
 } from "@/scripts/types"
 
-const BASE_URL = "http://192.168.1.69:8000"
+const BASE_URL = "http://localhost/api"
 
 export async function AddHarvests(payload: HarvestPayload) {
   const response = await fetch(`${BASE_URL}/harvests`, {

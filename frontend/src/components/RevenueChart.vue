@@ -64,11 +64,12 @@ function initChart() {
             animation: { duration: 600, easing: "easeInOutQuart" },
             layout: { padding: { top: 24 } },
             onClick: async (_e, elements) => {
-                if (!elements.length) {
+                const element = elements[0];
+                if (!element) {
                     selectedMonth.value = null;
                     return;
                 }
-                const monthIndex = elements[0].index;
+                const monthIndex = element.index;
                 const month = monthIndex + 1;
                 loadingMonth.value = true;
                 try {
@@ -118,7 +119,10 @@ async function applyData(data: YearlyRevenueItem[]) {
     if (!chart) return;
     await nextTick();
 
-    (chart.data.datasets[0].data as number[]).splice(
+    const dataset = chart.data.datasets[0];
+    if (!dataset) return;
+
+    (dataset.data as number[]).splice(
         0, 12, ...monthlyTotals(data)
     );
 
@@ -131,7 +135,8 @@ watch(
         if (!chart) return;
         selectedMonth.value = null;
         if (!data.length) {
-            (chart.data.datasets[0].data as number[]).fill(0);
+            const dataset = chart.data.datasets[0];
+            if (dataset) (dataset.data as number[]).fill(0);
             chart.update();
             return;
         }

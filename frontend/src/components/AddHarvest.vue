@@ -3,7 +3,7 @@ import { ref, watch } from "vue"
 import type { HarvestIn } from "@/scripts/types"
 import { AddHarvests } from "@/scripts/api"
 import { useHarvest } from "@/scripts/useHarvest"
-import { PLANT_LIST } from "@/scripts/plants"
+import { DEFAULT_PLANT,PLANT_LIST } from "@/scripts/plants"
 
 import { useI18n } from 'vue-i18n'
 import PopUp from "./PopUp.vue"
@@ -23,7 +23,7 @@ const { loadPage } = useHarvest()
 
 const createEmptyRow = (): HarvestIn => ({
     date: globalDate.value,
-    plant_type: "",
+    plant_type: DEFAULT_PLANT,
     count: 0,
     unit_price: 0,
 })

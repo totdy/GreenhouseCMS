@@ -1,9 +1,10 @@
-FROM python:3.14.3-alpine
+FROM python:3.14.3-slim
 
 WORKDIR /app
 
-COPY . .
-
+COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-CMD ["python", "src/main.py"]
+COPY . .
+
+CMD ["python", "-m", "src.main"]
