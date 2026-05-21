@@ -2,7 +2,7 @@ networks:
   dev:
 services:
   nginx:
-    image: nginx:stable-alpine
+    image: nginx:1.30-alpine-slim
     ports:
       - "80:80"
     volumes:
