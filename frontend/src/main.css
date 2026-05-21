@@ -135,9 +135,7 @@ section {
 }
 
 #app {
-    padding: 1rem;
-
-    background-color: var(--bg-dark);
+    padding: 1rem;    
 
     display: flex;
     justify-content: flex-start;
@@ -151,3 +149,5 @@ section {
 
     position: relative;
 }
+
+html, body, #app{ background-color: var(--bg-dark); }
