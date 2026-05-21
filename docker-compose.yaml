@@ -17,6 +17,10 @@ services:
       context: ./backend
     ports:
       - "8000:8000"
+    environment:
+      DATABASE_URL: sqlite:///data/greenhouse.db
+    volumes:
+      - greenhouse-data:/app/data
     networks:
       - dev
   frontend:
@@ -24,3 +28,6 @@ services:
       context: ./frontend
     networks:
       - dev
+
+volumes:
+  greenhouse-data:

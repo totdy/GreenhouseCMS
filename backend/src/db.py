@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 from sqlalchemy import create_engine, extract, select, update, func
 from sqlalchemy.orm import sessionmaker
 
@@ -7,7 +10,13 @@ from src.models import Harvests
 
 import calendar
 
-engine = create_engine(url="sqlite:///greenhouse.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///greenhouse.db")
+
+if DATABASE_URL.startswith("sqlite:///") and not DATABASE_URL.endswith(":memory:"):
+    db_path = DATABASE_URL.removeprefix("sqlite:///")
+    Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+
+engine = create_engine(url=DATABASE_URL)
 
 session = sessionmaker(engine)
 

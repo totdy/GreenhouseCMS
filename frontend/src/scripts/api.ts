@@ -7,7 +7,8 @@ import type {
   MonthlyActivityList,
 } from "@/scripts/types"
 
-const BASE_URL = "http://localhost/api"
+// Relative URL: works on localhost, LAN IP, or any host nginx serves on
+const BASE_URL = "/api"
 
 export async function AddHarvests(payload: HarvestPayload) {
   const response = await fetch(`${BASE_URL}/harvests`, {
