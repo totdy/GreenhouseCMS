@@ -3,7 +3,7 @@ import { ref, watch } from "vue"
 import type { HarvestIn } from "@/scripts/types"
 import { AddHarvests } from "@/scripts/api"
 import { useHarvest } from "@/scripts/useHarvest"
-import { DEFAULT_PLANT,PLANT_LIST } from "@/scripts/plants"
+import { DEFAULT_PLANT, PLANT_LIST } from "@/scripts/plants"
 
 import { useI18n } from 'vue-i18n'
 import PopUp from "./PopUp.vue"
@@ -118,8 +118,6 @@ form {
 
 .remove {
     width: -webkit-fill-available;
-
-    background-color: var(--danger);
 }
 
 .rows {
