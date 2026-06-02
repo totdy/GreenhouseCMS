@@ -1,5 +1,5 @@
-<img width="1901" height="907" alt="screen1" src="https://github.com/user-attachments/assets/4c5abe3b-09ad-4ad8-a58c-b8ec4bfca6a7" />
+<img width="1280" height="720" alt="greenhouseCMS1" src="https://github.com/user-attachments/assets/97654b7a-8cb0-4841-a6ba-beae0b02ca18" />
 <br>
-<img width="1900" height="904" alt="screen2" src="https://github.com/user-attachments/assets/274efa49-1388-49df-b934-6dc73c23602c" />
+<img width="1280" height="720" alt="greenhouseCMS2" src="https://github.com/user-attachments/assets/6d457f1e-0d34-4526-8b11-4aa8e37085b7" />
 <br>
-<img width="1901" height="905" alt="screen3" src="https://github.com/user-attachments/assets/e9b75d65-df9a-4b2a-812f-7a167a7af25d" />
+<img width="1280" height="720" alt="greenhouseCMS3" src="https://github.com/user-attachments/assets/a86e1802-6ea7-43c6-836f-a6bf378eff7f" />
