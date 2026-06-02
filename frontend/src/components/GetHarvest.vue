@@ -22,8 +22,8 @@ onMounted(() => loadPage(1))
 
     <ul v-show="harvests.length" :style="{ opacity: loadingHarvests ? 0.4 : 1 }">
       <li v-for="item in harvests" :key="item.id">
-        <p>{{ t(`addHarvest.type.${item.plant_type.toLowerCase()}`) }}</p>
-        <p>{{ item.count }} {{ t(`addHarvest.unit.${getPlantUnit(item.plant_type).toLowerCase()}`) }}</p>
+        <p>{{ t(`addHarvest.type.${item.plant_type}`) }}</p>
+        <p>{{ item.count }} {{ t(`addHarvest.unit.${getPlantUnit(item.plant_type)}`) }}</p>
         <p>€{{ item.unit_price.toFixed(2) }}/{{ t("addHarvest.unit.title") }}</p>
         <p>{{ formatDate(item.date) }}</p>
       </li>

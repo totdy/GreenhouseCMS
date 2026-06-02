@@ -27,7 +27,7 @@ const selectedMonth = ref<{ label: string; entries: MonthlyActivityItem[] } | nu
 const loadingMonth = ref(false);
 
 const chartLabel = computed(() =>
-    t(`addHarvest.type.${selectedPlant.value.toLowerCase()}`)
+    t(`addHarvest.type.${selectedPlant.value}`)
 );
 
 function getCssVar(name: string): string {
@@ -170,7 +170,7 @@ onMounted(() => {
             {{ t("addHarvest.type.title") }}
             <select v-model="selectedPlant">
                 <option v-for="plant in PLANT_LIST" :key="plant" :value="plant">
-                    {{ t(`addHarvest.type.${plant.toLowerCase()}`) }}
+                    {{ t(`addHarvest.type.${plant}`) }}
                 </option>
             </select>
         </label>

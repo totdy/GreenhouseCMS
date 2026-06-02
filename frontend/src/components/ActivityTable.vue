@@ -25,7 +25,7 @@ const rows = computed(() => {
         <h2>{{ t("activityTable.title") }}</h2>
         <ol>
             <li v-for="item in rows" :key="item.plant_type">
-                <span>{{ t(`addHarvest.type.${item.plant_type.toLocaleLowerCase()}`) }}</span>
+                <span>{{ t(`addHarvest.type.${item.plant_type}`) }}</span>
                 <span>
                     {{ item.total }}
                     <template v-if="isPlantType(item.plant_type)">

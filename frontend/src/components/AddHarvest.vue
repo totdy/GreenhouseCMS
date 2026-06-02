@@ -78,7 +78,7 @@ async function handleSubmit() {
                     <select v-model.lazy="row.plant_type" required>
                         <option value="" selected disabled></option>
                         <option v-for="plant in PLANT_LIST" :key="plant" :value="plant">
-                            {{ t(`addHarvest.type.${plant.toLowerCase()}`) }}
+                            {{ t(`addHarvest.type.${plant}`) }}
                         </option>
                     </select>
                 </div>

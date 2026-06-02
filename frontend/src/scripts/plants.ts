@@ -2,9 +2,9 @@ export type CountUnit = "kg" | "box" | "bunch"
 
 export const PLANT_TYPES = {
   Tomato: { unit: "kg" },
-  Tomatocherry: { unit: "box" },
+  TomatoCherry: { unit: "box" },
   Cucumber: { unit: "kg" },
-  Bellpepper: { unit: "kg" },
+  BellPepper: { unit: "kg" },
   Garlic: { unit: "bunch" },
   Dill: { unit: "bunch" },
   Onion: { unit: "bunch" },
@@ -18,6 +18,7 @@ export const PLANT_TYPES = {
   Basil: { unit: "bunch" },
   Bouquet: { unit: "bunch" },
   Zucchini: { unit: "kg" },
+  RedBeetLeaves: { unit: "bunch" },
 } as const satisfies Record<string, { unit: CountUnit }>
 
 export type PlantType = keyof typeof PLANT_TYPES
