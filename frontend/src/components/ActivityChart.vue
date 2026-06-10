@@ -18,6 +18,11 @@ const props = defineProps<{
     year: number;
 }>();
 
+const emit = defineEmits<{
+    (e: "month-selected", payload: { label: string; entries: MonthlyActivityItem[] } | null): void;
+    (e: "month-loading", loading: boolean): void;
+}>();
+
 const selectedPlant = ref<PlantType>(DEFAULT_PLANT);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
@@ -75,24 +80,27 @@ function initChart() {
                 const element = elements[0];
                 if (!element) {
                     selectedMonth.value = null;
+                    emit("month-selected", null);
                     return;
                 }
                 const monthIndex = element.index;
                 const month = monthIndex + 1;
                 loadingMonth.value = true;
+                emit("month-loading", true);
                 try {
                     const resp = await GetActivityByMonth(props.year, month);
                     const entries = resp.data.filter(
                         (row) => row.plant_type === selectedPlant.value
                     );
-                    selectedMonth.value = {
-                        label: MONTH_LABELS[monthIndex] || "",
-                        entries,
-                    };
+                    const payload = { label: MONTH_LABELS[monthIndex] || "", entries };
+                    selectedMonth.value = payload;
+                    emit("month-selected", payload);
                 } catch {
                     selectedMonth.value = null;
+                    emit("month-selected", null);
                 } finally {
                     loadingMonth.value = false;
+                    emit("month-loading", false);
                 }
             },
             scales: {
@@ -145,7 +153,9 @@ watch(
     () => [props.data, selectedPlant.value] as const,
     ([data]) => {
         if (!chart) return;
+        // Clear daily panel when plant or data changes
         selectedMonth.value = null;
+        emit("month-selected", null);
         if (!data.length) {
             const dataset = chart.data.datasets[0];
             if (dataset) (dataset.data as number[]).fill(0);
@@ -179,7 +189,7 @@ onMounted(() => {
         <div v-if="selectedMonth || loadingMonth" class="popup">
             <div class="popup-header">
                 <span>{{ selectedMonth?.label ?? "..." }}</span>
-                <button @click="selectedMonth = null" :disabled="loadingMonth">✕</button>
+                <button @click="selectedMonth = null; $emit('month-selected', null)" :disabled="loadingMonth">✕</button>
             </div>
             <ul v-if="selectedMonth">
                 <li v-for="entry in selectedMonth.entries" :key="entry.date">

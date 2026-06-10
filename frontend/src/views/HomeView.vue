@@ -3,9 +3,10 @@ import RevenueChart from '@/components/RevenueChart.vue';
 import ActivityChart from '@/components/ActivityChart.vue';
 import ActivityTable from '@/components/ActivityTable.vue';
 import RevenueTable from '@/components/RevenueTable.vue';
+import ActivityDaily from '@/components/ActivityDaily.vue';
 
 import { GetActivityByYear, GetRevenueByYear } from "@/scripts/api";
-import type { YearlyActivityItem, YearlyRevenueItem } from "@/scripts/types";
+import type { MonthlyActivityItem, YearlyActivityItem, YearlyRevenueItem } from "@/scripts/types";
 
 import { ref, watch } from 'vue';
 
@@ -35,7 +36,18 @@ async function loadRevenueData() {
   }
 }
 
-watch(chartYear, () => { loadActivityData(), loadRevenueData() }, { immediate: true });
+const dailyMonth = ref<{ label: string; entries: MonthlyActivityItem[] } | null>(null);
+const dailyLoading = ref(false);
+
+function onMonthSelected(payload: { label: string; entries: MonthlyActivityItem[] } | null) {
+  dailyMonth.value = payload;
+}
+
+watch(chartYear, () => {
+  dailyMonth.value = null;
+  loadActivityData();
+  loadRevenueData();
+}, { immediate: true });
 </script>
 
 <template>
@@ -52,7 +64,8 @@ watch(chartYear, () => { loadActivityData(), loadRevenueData() }, { immediate: t
   <div>
     <RevenueTable :data="revenueData" :currentMonth=" chartYear===currentYear ? currentMonth+1 : 12" />
     <RevenueChart :data="revenueData" :year="chartYear" />
-    <ActivityChart :data="activityData" :year="chartYear" />
+    <ActivityChart :data="activityData" :year="chartYear" @month-selected="onMonthSelected" @month-loading="dailyLoading = $event" />
+    <ActivityDaily :month-label="dailyMonth?.label ?? null" :entries="dailyMonth?.entries ?? []" :loading="dailyLoading" />
     <ActivityTable :data="activityData" />
   </div>
 </template>
@@ -73,7 +86,8 @@ div {
     "rty rc rc"
     "rtm rc rc"
     "ac  ac at"
-    "ac  ac at";
+    "ac  ac at"
+    "ad  ad at";
 
   &>* {
     min-width: 0;
@@ -86,6 +100,7 @@ div {
       "rc  rc"
       "rty rtm"
       "ac  ac"
+      "ad  ad"
       "at  at";
   }
 }

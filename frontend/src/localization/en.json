@@ -23,6 +23,14 @@
     "activityTable": {
         "title": "Yearly Activity"
     },
+    "activityDaily": {
+        "hint": "Click a month on the chart to see daily breakdown",
+        "loading": "Loading...",
+        "noData": "No entries for this month",
+        "sameDay": "same day",
+        "harvestedFrom": "harvested from",
+        "to": "to"
+    },
     "common": {
         "month": {
             "jan": "Jan",
