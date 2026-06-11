@@ -7,15 +7,18 @@ const { t } = useI18n();
 
 const props = defineProps<{
     data: YearlyRevenueItem[],
-    currentMonth: number
+    year: number
 }>();
+
+const currentMonth = ref(new Date().getMonth());
+const currentYear = ref(new Date().getFullYear());
 
 const yearlyRevenue = ref(0);
 const monthlyRevenue = ref(0);
 
 function calculateRevenue() {
     yearlyRevenue.value = props.data.reduce((sum, item) => sum + item.revenue, 0);
-    monthlyRevenue.value = Math.round(yearlyRevenue.value / props.currentMonth * 100) / 100;
+    monthlyRevenue.value = Math.round(yearlyRevenue.value / (props.year === currentYear.value ? currentMonth.value + 1 : 12) * 100) / 100;
 }
 
 watch(() => props.data, calculateRevenue, { deep: true, immediate: true });

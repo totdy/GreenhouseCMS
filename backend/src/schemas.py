@@ -8,7 +8,7 @@ class HarvestIn(BaseModel):
     unit_price: float
 
 class HarvestOut(HarvestIn):
-    id: int    
+    id: int
     created_at: datetime
 
 class HarvestPayload(BaseModel):
@@ -17,14 +17,14 @@ class HarvestPayload(BaseModel):
 class YearlyRevenueItem(BaseModel):
     month: int
     revenue: float
-    
+
 class YearlyRevenueList(BaseModel):
     data: list[YearlyRevenueItem]
 
-class YearlyActivityItem(BaseModel):    
+class YearlyActivityItem(BaseModel):
     month: int
     plant_type: str
-    count: float    
+    count: float
 
 class YearlyActivityList(BaseModel):
     data: list[YearlyActivityItem]
@@ -42,10 +42,18 @@ class MonthlyRevenueItem(BaseModel):
 class MonthlyRevenueList(BaseModel):
     data: list[MonthlyRevenueItem]
 
-class MonthlyActivityItem(BaseModel):    
+class MonthlyActivityItem(BaseModel):
     date: date
     plant_type: str
-    count: float   
+    count: float
 
 class MonthlyActivityList(BaseModel):
     data: list[MonthlyActivityItem]
+
+class WeeklyActivityItem(BaseModel):
+    week: int
+    plant_type: str
+    count: float
+
+class WeeklyActivityList(BaseModel):
+    data: list[WeeklyActivityItem]

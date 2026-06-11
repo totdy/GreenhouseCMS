@@ -4,7 +4,7 @@
     --bg-light: hsl(82 100% 94%);
     --text: hsl(91 100% 2%);
     --text-muted: hsl(73 100% 11%);
-    
+
 
     --border: hsl(73 100% 11%);
     --border-muted: hsl(75 100% 6%);
@@ -12,7 +12,7 @@
     --primary: hsl(79 41% 57%);
     --primary05: hsla(79, 41%, 57%, 0.5);
     --secondary: hsl(267 72% 78%);
-    
+
     --highlight: hsla(75, 84%, 24%, 0.5);
     --neutral: hsl(0 0% 95%);
 
@@ -38,7 +38,7 @@
 
     --highlight: hsla(75, 84%, 24%, 0.5);
     --neutral: hsl(0 0% 5%);
-    
+
     --danger: hsl(7 47% 42%);
     --warning: hsl(53 100% 17%);
     --success: hsl(161 100% 19%);
@@ -100,7 +100,8 @@ button {
         }
     }
 
-    &.router-link-active, .router-link-exact-active {
+    &.router-link-active,
+    .router-link-exact-active {
         background-color: var(--secondary);
     }
 }
@@ -144,7 +145,7 @@ section {
 }
 
 #app {
-    padding: 1rem;    
+    padding: 1rem;
 
     display: flex;
     justify-content: flex-start;
@@ -159,4 +160,8 @@ section {
     position: relative;
 }
 
-html, body, #app{ background-color: var(--bg-dark); }
+html,
+body,
+#app {
+    background-color: var(--bg-dark);
+}

@@ -5,10 +5,10 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from src.db import AddHarvest, UpdateHarvest, GetHarvest, GetYearlyRevenue, GetMonthlyRevenue, engine, GetYearlyActivity, GetMonthlyActivity, GetHarvestsAll
+from src.db import AddHarvest, GetWeeklyActivity, UpdateHarvest, GetHarvest, GetYearlyRevenue, GetMonthlyRevenue, engine, GetYearlyActivity, GetMonthlyActivity, GetHarvestsAll
 from src.models import Base
 
-from src.schemas import HarvestPayload, HarvestIn, YearlyActivityList, MonthlyActivityList, HarvestsAllResponse, YearlyRevenueList, MonthlyRevenueList
+from src.schemas import HarvestPayload, HarvestIn, WeeklyActivityList, YearlyActivityList, MonthlyActivityList, HarvestsAllResponse, YearlyRevenueList, MonthlyRevenueList
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -65,6 +65,10 @@ def GetHarvestActivityByYear(year: int):
 @app.get("/activity/{year}/{month}", response_model=MonthlyActivityList)
 def GetHarvestActivityByMonth(year: int, month: int):
     return {"data": GetMonthlyActivity(year=year,month=month)}
+
+@app.get("/activity-weekly/{year}", response_model=WeeklyActivityList)
+def GetHarvestActivityByWeek(year: int):
+    return {"data": GetWeeklyActivity(year=year)}
 
 if __name__ == "__main__":
     uvicorn.run("src.main:app", host="0.0.0.0", port=8000, log_level="info")

@@ -10,7 +10,7 @@ class Harvests(Base):
     __tablename__ = "harvests"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    date: Mapped[date] = mapped_column(Date)    
+    date: Mapped[date] = mapped_column(Date)
     plant_type: Mapped[str] = mapped_column(String)
     count: Mapped[float] = mapped_column(Numeric(10, 2))
     unit_price: Mapped[float] = mapped_column(Numeric(10, 4))

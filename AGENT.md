@@ -108,7 +108,7 @@ export function getPlantUnit(plant: PlantType): CountUnit
 **Adding a plant** requires:
 
 1. Entry in `PLANT_TYPES` (key = API `plant_type` string, e.g. `Tomatocherry`).
-2. i18n labels in `en.json` and `ua.json` under `addHarvest.type.<lowercase>` (e.g. `tomatocherry`).
+2. i18n labels in `en.json` and `ua.json` under `common.type.<lowercase>` (e.g. `tomatocherry`).
 
 Units (`kg` | `box` | `bunch`) are **frontend-only**; the backend stores `plant_type`, `count`, and `unit_price` but not `count_unit`. UI resolves units via `getPlantUnit(plant_type)`.
 

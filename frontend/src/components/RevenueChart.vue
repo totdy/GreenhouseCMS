@@ -62,7 +62,6 @@ function initChart() {
         options: {
             responsive: true,
             animation: { duration: 600, easing: "easeInOutQuart" },
-            layout: { padding: { top: 24 } },
             onClick: async (_e, elements) => {
                 const element = elements[0];
                 if (!element) {
@@ -188,9 +187,9 @@ onMounted(() => {
     background: var(--bg-light);
     border: 1px solid var(--highlight);
     border-radius: 0.5rem;
-    
+
     padding: 0.75rem;
-    
+
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 

@@ -4,7 +4,7 @@ from pathlib import Path
 from sqlalchemy import create_engine, extract, select, update, func
 from sqlalchemy.orm import sessionmaker
 
-from src.schemas import HarvestPayload, HarvestIn, YearlyActivityItem, YearlyRevenueItem, HarvestOut, MonthlyRevenueItem, MonthlyActivityItem
+from src.schemas import HarvestPayload, HarvestIn, WeeklyActivityItem, YearlyActivityItem, YearlyRevenueItem, HarvestOut, MonthlyRevenueItem, MonthlyActivityItem
 
 from src.models import Harvests
 
@@ -123,6 +123,21 @@ def GetMonthlyActivity(year: int, month: int) -> list[MonthlyActivityItem]:
             .filter(Harvests.date.between(f"{year}-{month:02d}-01", f"{year}-{month:02d}-{last_day:02d}"))
             .group_by(Harvests.date, Harvests.plant_type)
             .order_by(Harvests.date)
+        )
+        result = new_session.execute(query)
+        return result.all() # type: ignore
+    
+def GetWeeklyActivity(year: int) -> list[WeeklyActivityItem]:
+    with session() as new_session:
+        query = (
+            select(
+                extract('week', Harvests.date).label("week"),
+                Harvests.plant_type,
+                func.sum(Harvests.count).label("count")
+            )
+            .filter(Harvests.date.between(f"{year}-01-01", f"{year}-12-31"))
+            .group_by(extract('week', Harvests.date), Harvests.plant_type)
+            .order_by(extract('week', Harvests.date))
         )
         result = new_session.execute(query)
         return result.all() # type: ignore

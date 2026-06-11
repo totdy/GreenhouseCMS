@@ -5,6 +5,7 @@ import type {
   YearlyRevenueList,
   MonthlyRevenueList,
   MonthlyActivityList,
+  WeeklyActivityList,
 } from "@/scripts/types"
 
 // Relative URL: works on localhost, LAN IP, or any host nginx serves on
@@ -51,6 +52,13 @@ export async function GetActivityByYear(year: number): Promise<YearlyActivityLis
 
 export async function GetActivityByMonth(year: number, month: number): Promise<MonthlyActivityList> {
   const response = await fetch(`${BASE_URL}/activity/${year}/${month}`)
+
+  if (!response.ok) throw new Error(`Error: ${response.statusText}`)
+  return response.json()
+}
+
+export async function GetActivityByWeek(year: number): Promise<WeeklyActivityList> {
+  const response = await fetch(`${BASE_URL}/activity-weekly/${year}`)
 
   if (!response.ok) throw new Error(`Error: ${response.statusText}`)
   return response.json()

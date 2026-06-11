@@ -67,7 +67,7 @@ async function handleSubmit() {
 
         <form @submit.prevent="handleSubmit">
             <div class="rows">
-                <label>{{ t("addHarvest.type.title") }}</label>
+                <label>{{ t("common.type.title") }}</label>
                 <label>{{ t("addHarvest.count.title") }}</label>
                 <label>{{ t("addHarvest.price.title") }}</label>
                 <label><button type="button" @click="addRow">{{ t("addHarvest.btn.add") }}</button></label>
@@ -78,7 +78,7 @@ async function handleSubmit() {
                     <select v-model.lazy="row.plant_type" required>
                         <option value="" selected disabled></option>
                         <option v-for="plant in PLANT_LIST" :key="plant" :value="plant">
-                            {{ t(`addHarvest.type.${plant}`) }}
+                            {{ t(`common.type.${plant}`) }}
                         </option>
                     </select>
                 </div>
@@ -90,7 +90,7 @@ async function handleSubmit() {
                 </div>
                 <div>
                     <button class="remove" type="button" @click="removeRow(index)">{{ t("addHarvest.btn.remove")
-                    }}</button>
+                        }}</button>
                 </div>
             </div>
 

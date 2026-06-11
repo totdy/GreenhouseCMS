@@ -23,6 +23,11 @@
     "activityTable": {
         "title": "Річна активність"
     },
+    "activityWeekly": {
+        "title": "Weekly activity",
+        "shortWeek": "Т",
+        "day": "день"
+    },
     "common": {
         "month": {
             "jan": "Січ",
@@ -37,24 +42,8 @@
             "oct": "Жов",
             "nov": "Лис",
             "dec": "Гру"
-        }
-    },
-    "getHarvest": {
-        "title": "Активність",
-        "empty": "Немає нещодавньої активності"
-    },
-    "addHarvest": {
-        "title": "Додати врожай",
-        "btn": {
-            "add": "+ Додати ряд",
-            "submit": "↗ Надіслати всі",
-            "remove": "- Видалити"
-        },
-        "date": {
-            "title": "Дата збору врожаю"
         },
         "type": {
-            "title": "Тип",
             "Tomato": "🍅 Томат",
             "TomatoCherry": "🍒 Томат чері",
             "Cucumber": "🥒 Огірок",
@@ -74,17 +63,32 @@
             "Zucchini": "🌵 Кабачок",
             "RedBeet": "🫖 Червоний буряк"
         },
+        "unit": {
+            "title": "Одиниця",
+            "kg": "⚫ кг-ми",
+            "box": "📦 ящики",
+            "bunch": "💐 пучки"
+        }
+    },
+    "getHarvest": {
+        "title": "Активність",
+        "empty": "Немає нещодавньої активності"
+    },
+    "addHarvest": {
+        "title": "Додати врожай",
+        "btn": {
+            "add": "+ Додати ряд",
+            "submit": "↗ Надіслати всі",
+            "remove": "- Видалити"
+        },
+        "date": {
+            "title": "Дата збору врожаю"
+        },
         "count": {
             "title": "Кількість"
         },
         "price": {
             "title": "Ціна"
-        },
-        "unit": {
-            "title": "Одиниця",
-            "kg": "⚫ кг",
-            "box": "📦 ящики",
-            "bunch": "💐 пучки"
         },
         "msg": {
             "saving": "Збереження",

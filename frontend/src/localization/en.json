@@ -23,13 +23,10 @@
     "activityTable": {
         "title": "Yearly Activity"
     },
-    "activityDaily": {
-        "hint": "Click a month on the chart to see daily breakdown",
-        "loading": "Loading...",
-        "noData": "No entries for this month",
-        "sameDay": "same day",
-        "harvestedFrom": "harvested from",
-        "to": "to"
+    "activityWeekly": {
+        "title": "Weekly activity",
+        "shortWeek": "W",
+        "day": "day"
     },
     "common": {
         "month": {
@@ -45,24 +42,8 @@
             "oct": "Oct",
             "nov": "Nov",
             "dec": "Dec"
-        }
-    },
-    "getHarvest": {
-        "title": "Activity",
-        "empty": "No recent activity"
-    },
-    "addHarvest": {
-        "title": "Add Harvest",
-        "btn": {
-            "add": "+ Add Row",
-            "submit": "↗ Submit All",
-            "remove": "- Remove"
-        },
-        "date": {
-            "title": "Date of harvest"
         },
         "type": {
-            "title": "Type",
             "Tomato": "🍅 Tomato",
             "TomatoCherry": "🍒 Tomato cherry",
             "Cucumber": "🥒 Cucumber",
@@ -82,17 +63,32 @@
             "Zucchini": "🌵 Zucchini",
             "RedBeet": "🫖 Red beet"
         },
-        "count": {
-            "title": "Count"
-        },
-        "price": {
-            "title": "Price"
-        },
         "unit": {
             "title": "Unit",
             "kg": "⚫ kgs",
             "box": "📦 boxes",
             "bunch": "💐 bunches"
+        }
+    },
+    "getHarvest": {
+        "title": "Activity",
+        "empty": "No recent activity"
+    },
+    "addHarvest": {
+        "title": "Add Harvest",
+        "btn": {
+            "add": "+ Add Row",
+            "submit": "↗ Submit All",
+            "remove": "- Remove"
+        },
+        "date": {
+            "title": "Date of harvest"
+        },
+        "count": {
+            "title": "Count"
+        },
+        "price": {
+            "title": "Price"
         },
         "msg": {
             "saving": "Saving",

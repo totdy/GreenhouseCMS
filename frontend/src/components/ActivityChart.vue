@@ -6,7 +6,7 @@ Chart.register(ChartDataLabels);
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import type { MonthlyActivityItem, YearlyActivityItem } from "@/scripts/types";
 import { GetActivityByMonth } from "@/scripts/api";
-import { DEFAULT_PLANT, PLANT_LIST, type PlantType } from "@/scripts/plants";
+import { type PlantType } from "@/scripts/plants";
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
@@ -16,14 +16,9 @@ const MONTH_LABELS = [t("common.month.jan"), t("common.month.feb"), t("common.mo
 const props = defineProps<{
     data: YearlyActivityItem[];
     year: number;
+    plant: PlantType;
 }>();
 
-const emit = defineEmits<{
-    (e: "month-selected", payload: { label: string; entries: MonthlyActivityItem[] } | null): void;
-    (e: "month-loading", loading: boolean): void;
-}>();
-
-const selectedPlant = ref<PlantType>(DEFAULT_PLANT);
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 
 let chart: Chart | null = null;
@@ -32,7 +27,7 @@ const selectedMonth = ref<{ label: string; entries: MonthlyActivityItem[] } | nu
 const loadingMonth = ref(false);
 
 const chartLabel = computed(() =>
-    t(`addHarvest.type.${selectedPlant.value}`)
+    t(`common.type.${props.plant}`)
 );
 
 function getCssVar(name: string): string {
@@ -75,32 +70,28 @@ function initChart() {
         options: {
             responsive: true,
             animation: { duration: 600, easing: "easeInOutQuart" },
-            layout: { padding: { top: 24 } },
             onClick: async (_e, elements) => {
                 const element = elements[0];
                 if (!element) {
                     selectedMonth.value = null;
-                    emit("month-selected", null);
                     return;
                 }
                 const monthIndex = element.index;
                 const month = monthIndex + 1;
                 loadingMonth.value = true;
-                emit("month-loading", true);
                 try {
                     const resp = await GetActivityByMonth(props.year, month);
                     const entries = resp.data.filter(
-                        (row) => row.plant_type === selectedPlant.value
+                        (row) => row.plant_type === props.plant
                     );
-                    const payload = { label: MONTH_LABELS[monthIndex] || "", entries };
-                    selectedMonth.value = payload;
-                    emit("month-selected", payload);
+                    selectedMonth.value = {
+                        label: MONTH_LABELS[monthIndex] || "",
+                        entries,
+                    };
                 } catch {
                     selectedMonth.value = null;
-                    emit("month-selected", null);
                 } finally {
                     loadingMonth.value = false;
-                    emit("month-loading", false);
                 }
             },
             scales: {
@@ -143,19 +134,17 @@ async function applyData() {
 
     dataset.label = chartLabel.value;
     (dataset.data as number[]).splice(
-        0, 12, ...monthlyCounts(props.data, selectedPlant.value)
+        0, 12, ...monthlyCounts(props.data, props.plant)
     );
 
     chart.update();
 }
 
 watch(
-    () => [props.data, selectedPlant.value] as const,
+    () => [props.data, props.plant] as const,
     ([data]) => {
         if (!chart) return;
-        // Clear daily panel when plant or data changes
         selectedMonth.value = null;
-        emit("month-selected", null);
         if (!data.length) {
             const dataset = chart.data.datasets[0];
             if (dataset) (dataset.data as number[]).fill(0);
@@ -176,20 +165,13 @@ onMounted(() => {
 <template>
     <section id="ac">
         <h2>{{ t("activityChart.title") }}</h2>
-        <label>
-            {{ t("addHarvest.type.title") }}
-            <select v-model="selectedPlant">
-                <option v-for="plant in PLANT_LIST" :key="plant" :value="plant">
-                    {{ t(`addHarvest.type.${plant}`) }}
-                </option>
-            </select>
-        </label>
+
         <canvas ref="canvasRef"></canvas>
 
         <div v-if="selectedMonth || loadingMonth" class="popup">
             <div class="popup-header">
                 <span>{{ selectedMonth?.label ?? "..." }}</span>
-                <button @click="selectedMonth = null; $emit('month-selected', null)" :disabled="loadingMonth">✕</button>
+                <button @click="selectedMonth = null" :disabled="loadingMonth">✕</button>
             </div>
             <ul v-if="selectedMonth">
                 <li v-for="entry in selectedMonth.entries" :key="entry.date">
@@ -205,13 +187,6 @@ onMounted(() => {
 #ac {
     grid-area: ac;
     position: relative;
-}
-
-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
 }
 
 .popup {

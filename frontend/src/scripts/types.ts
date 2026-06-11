@@ -54,6 +54,16 @@ export interface MonthlyActivityList {
   data: MonthlyActivityItem[]
 }
 
+export interface WeeklyActivityItem {
+  week: number
+  plant_type: PlantType
+  count: number
+}
+
+export interface WeeklyActivityList {
+  data: WeeklyActivityItem[]
+}
+
 export interface HarvestsAllResponse {
   data: HarvestOut[]
   total: number
