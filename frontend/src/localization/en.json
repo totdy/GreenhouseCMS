@@ -65,7 +65,7 @@
         },
         "unit": {
             "title": "Unit",
-            "kg": "⚫ kgs",
+            "kg": "⚫ kilograms",
             "box": "📦 boxes",
             "bunch": "💐 bunches"
         }
