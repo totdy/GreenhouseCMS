@@ -16,9 +16,13 @@ const currentYear = ref(new Date().getFullYear());
 const yearlyRevenue = ref(0);
 const monthlyRevenue = ref(0);
 
+function roundToTwo(num: number) {
+    return Math.round(num * 100) / 100;
+}
+
 function calculateRevenue() {
-    yearlyRevenue.value = props.data.reduce((sum, item) => sum + item.revenue, 0);
-    monthlyRevenue.value = Math.round(yearlyRevenue.value / (props.year === currentYear.value ? currentMonth.value + 1 : 12) * 100) / 100;
+    yearlyRevenue.value = roundToTwo(props.data.reduce((sum, item) => sum + item.revenue, 0));
+    monthlyRevenue.value = roundToTwo(yearlyRevenue.value / (props.year === currentYear.value ? currentMonth.value + 1 : 12));
 }
 
 watch(() => props.data, calculateRevenue, { deep: true, immediate: true });

@@ -6,6 +6,7 @@ Chart.register(ChartDataLabels);
 import { nextTick, onMounted, ref, watch } from "vue";
 import type { MonthlyRevenueItem, YearlyRevenueItem } from "@/scripts/types";
 import { GetRevenueByMonth } from "@/scripts/api";
+import { getCssVar } from "@/scripts/functions";
 
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
@@ -23,10 +24,6 @@ let chart: Chart | null = null;
 
 const selectedMonth = ref<{ label: string; entries: MonthlyRevenueItem[] } | null>(null);
 const loadingMonth = ref(false);
-
-function getCssVar(name: string): string {
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-}
 
 function monthlyTotals(data: YearlyRevenueItem[]): number[] {
     const buckets = Array(12).fill(0);

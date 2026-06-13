@@ -21,3 +21,7 @@ export function getISOWeekDates(year: number, week: number) {
         month: firstDay.getMonth() + 1
     };
 }
+
+export function getCssVar(name: string): string {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}

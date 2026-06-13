@@ -7,6 +7,7 @@ import { computed, nextTick, onMounted, ref, watch } from "vue";
 import type { MonthlyActivityItem, YearlyActivityItem } from "@/scripts/types";
 import { GetActivityByMonth } from "@/scripts/api";
 import { type PlantType } from "@/scripts/plants";
+import { getCssVar } from "@/scripts/functions";
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
@@ -30,10 +31,6 @@ const chartLabel = computed(() =>
     t(`common.type.${props.plant}`)
 );
 
-function getCssVar(name: string): string {
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-}
-
 function monthlyCounts(data: YearlyActivityItem[], plant: string): number[] {
     const buckets = Array(12).fill(0);
     for (const row of data) {
@@ -51,7 +48,7 @@ function initChart() {
     chart = null;
 
     chart = new Chart(canvasRef.value, {
-        type: "line",
+        type: "bar",
         data: {
             labels: [...MONTH_LABELS],
             datasets: [
@@ -60,10 +57,7 @@ function initChart() {
                     data: Array(12).fill(0),
                     borderColor: getCssVar("--primary"),
                     backgroundColor: getCssVar("--primary05"),
-                    fill: true,
-                    tension: 0.3,
-                    pointHoverRadius: 8,
-                    pointHitRadius: 16,
+                    borderWidth: 1.5,
                 },
             ],
         },
