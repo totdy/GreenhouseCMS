@@ -15,7 +15,9 @@ const props = defineProps<{
 
 const MONTH_LABELS = [t("common.month.jan"), t("common.month.feb"), t("common.month.mar"), t("common.month.apr"), t("common.month.may"), t("common.month.jun"), t("common.month.jul"), t("common.month.aug"), t("common.month.sep"), t("common.month.oct"), t("common.month.nov"), t("common.month.dec")];
 
-const fmt = (d: Date) => d.toISOString().split('T')[0]?.split('-').slice(2).join('') ?? '';
+function fmt(d: Date) {
+    return d.toISOString().split('T')[0]?.split('-').slice(2).join('') ?? '';
+}
 
 const weekRows = computed(() => {
     const unit = getPlantUnit(props.plant);
@@ -34,11 +36,12 @@ const weekRows = computed(() => {
     <section id="aw">
         <h2>{{ t("activityWeekly.title") }}</h2>
         <div>
-            <ul class="week-rows">
+            <ul class="week-cols">
                 <li v-for="row in weekRows" :key="row.week">
                     <p>
                         📅{{ MONTH_LABELS[getISOWeekDates(props.year, row.week).month - 1] }}
-                        {{ fmt(getISOWeekDates(props.year, row.week).firstDay) }} - {{ fmt(getISOWeekDates(props.year,row.week).lastDay) }}
+                        {{ fmt(getISOWeekDates(props.year, row.week).firstDay) }} - {{ fmt(getISOWeekDates(props.year,
+                        row.week).lastDay) }}
                     </p>
                     <p>{{ row.count }}{{ t(`common.unit.${row.unit}`) }}</p>
                     <p>~{{ row.avg }}/{{ t("activityWeekly.day") }}</p>
@@ -70,7 +73,7 @@ li {
     align-items: center;
 }
 
-.week-rows {
+.week-cols {
     flex-direction: row;
     display: flex;
     gap: 1rem;
