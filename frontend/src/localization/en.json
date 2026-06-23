@@ -84,9 +84,12 @@
         "date": {
             "title": "Date of harvest"
         },
+        "type": {
+            "title": "Type"
+        },
         "count": {
             "title": "Count"
-        },
+        },        
         "price": {
             "title": "Price"
         },

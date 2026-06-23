@@ -67,7 +67,7 @@ async function handleSubmit() {
 
         <form @submit.prevent="handleSubmit">
             <div class="rows">
-                <label>{{ t("common.type.title") }}</label>
+                <label>{{ t("addHarvest.type.title") }}</label>
                 <label>{{ t("addHarvest.count.title") }}</label>
                 <label>{{ t("addHarvest.price.title") }}</label>
                 <label><button type="button" @click="addRow">{{ t("addHarvest.btn.add") }}</button></label>
