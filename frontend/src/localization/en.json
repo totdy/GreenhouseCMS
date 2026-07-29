@@ -56,13 +56,14 @@
             "Lovage": "🌿 Lovage",
             "Sorrel": "🥬 Sorrel",
             "Mint": "🌿 Mint",
-            "Radish": "🍎 Radish",
+            "Radish": "🫜 Radish",
             "Coriander": "🌿 Coriander",
             "Basil": "☘️ Basil",
             "Bouquet": "💐 Bouquet",
             "Zucchini": "🌵 Zucchini",
-            "RedBeet": "🫖 Red beet",
-            "SaltedCucumbers": "🫙 Salted cucumbers"
+            "RedBeet": "🍎 Red beet",
+            "SaltedCucumbers": "🫙 Salted cucumbers",
+            "MiniPepper": "🌶️ Mini pepper"
         },
         "unit": {
             "title": "Unit",

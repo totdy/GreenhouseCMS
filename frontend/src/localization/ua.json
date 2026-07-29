@@ -56,13 +56,14 @@
             "Lovage": "🌿 Любисток",
             "Sorrel": "🥬 Квасок",
             "Mint": "🌿 Мята",
-            "Radish": "🍎 Редис",
+            "Radish": "🫜 Редис",
             "Coriander": "🌿 Коріандр",
             "Basil": "☘️ Базилік",
             "Bouquet": "💐 Букет",
             "Zucchini": "🌵 Кабачок",
-            "RedBeet": "🫖 Червоний буряк",
-            "SaltedCucumbers": "🫙 Малосольні огірки"
+            "RedBeet": "🍎 Червоний буряк",
+            "SaltedCucumbers": "🫙 Малосольні огірки",
+            "MiniPepper": "🌶️ Міні-перець"
         },
         "unit": {
             "title": "Одиниця",
