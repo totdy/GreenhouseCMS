@@ -63,13 +63,15 @@
             "Zucchini": "🌵 Zucchini",
             "RedBeet": "🍎 Red beet",
             "SaltedCucumbers": "🫙 Salted cucumbers",
-            "MiniPepper": "🌶️ Mini pepper"
+            "MiniPepper": "🌶️ Mini pepper",
+            "Corn": "🌽 Corn"
         },
         "unit": {
             "title": "Unit",
             "kg": "⚫ kilograms",
             "box": "📦 boxes",
-            "bunch": "💐 bunches"
+            "bunch": "💐 bunches",
+            "piece": "▪️ pieces"
         }
     },
     "getHarvest": {
