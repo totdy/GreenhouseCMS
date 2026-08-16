@@ -131,7 +131,7 @@ Localized display labels live under `common.destination.<Destination>` in both l
 | `POST` | `/harvests` | `{ success, inserted }` | Body: `{ data: HarvestIn[] }` |
 | `PUT` | `/harvests/{id}` | `{ success }` | Single harvest update |
 | `GET` | `/harvests/all/{page}` | `HarvestsAllResponse` | 15 rows per page |
-| `GET` | `/revenue-by/{year}` | `{ data: YearlyRevenueItem[] }` | `{ month, revenue }` per row |
+| `GET` | `/revenue-by/{year}` | `{ data: YearlyRevenueItem[] }` | `{ month, destination, revenue }` per row |
 | `GET` | `/revenue-by/{year}/{month}` | `{ data: MonthlyRevenueItem[] }` | `{ date, revenue }` per day |
 | `GET` | `/activity/{year}` | `{ data: YearlyActivityItem[] }` | `{ month, plant_type, count }` |
 | `GET` | `/activity/{year}/{month}` | `{ data: MonthlyActivityItem[] }` | `{ date, plant_type, count }` per day |
@@ -146,7 +146,7 @@ CORS is open (`allow_origins=["*"]`) for local/dev. The frontend sends requests 
 - Loads yearly revenue and activity for the selected year via `GetRevenueByYear` / `GetActivityByYear`.
 - Passes `year` into chart components for month drill-down.
 
-**RevenueChart** — single line chart of 12 monthly totals; click a month → `GetRevenueByMonth(year, month)` → popup with daily revenue.
+**RevenueChart** — five destination lines of 12 monthly totals with one combined-revenue label per month; Slovyanskiy is rendered below the other destinations so its typically higher values do not obscure their lines. Click a month → `GetRevenueByMonth(year, month)` → popup with daily revenue.
 
 **ActivityChart** — single line chart for one selected plant (`PLANT_LIST` select); click a month → `GetActivityByMonth(year, month)` → popup filtered to that plant’s daily counts.
 

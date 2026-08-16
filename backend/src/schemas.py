@@ -19,6 +19,7 @@ class HarvestPayload(BaseModel):
 
 class YearlyRevenueItem(BaseModel):
     month: int
+    destination: str
     revenue: float
 
 class YearlyRevenueList(BaseModel):

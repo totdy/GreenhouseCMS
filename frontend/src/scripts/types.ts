@@ -20,6 +20,7 @@ export interface HarvestPayload {
 
 export interface YearlyRevenueItem {
   month: number
+  destination: Destination
   revenue: number
 }
 

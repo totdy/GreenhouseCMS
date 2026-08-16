@@ -6,12 +6,16 @@ Chart.register(ChartDataLabels);
 import { nextTick, onMounted, ref, watch } from "vue";
 import type { MonthlyRevenueItem, YearlyRevenueItem } from "@/scripts/types";
 import { GetRevenueByMonth } from "@/scripts/api";
+import { DESTINATION_LIST, type Destination } from "@/scripts/destinations";
 import { getCssVar } from "@/scripts/functions";
 
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const MONTH_LABELS = [t("common.month.jan"), t("common.month.feb"), t("common.month.mar"), t("common.month.apr"), t("common.month.may"), t("common.month.jun"), t("common.month.jul"), t("common.month.aug"), t("common.month.sep"), t("common.month.oct"), t("common.month.nov"), t("common.month.dec")];
+const DESTINATION_COLOR_VARS = ["--primary", "--secondary", "--success", "--warning", "--info"] as const;
+const DESTINATION_BG_COLOR_VARS = ["--primary05", "--secondary05", "--success05", "--warning05", "--info05"] as const;
+const SLOVYANSKIY = DESTINATION_LIST[0];
 
 const props = defineProps<{
     data: YearlyRevenueItem[];
@@ -25,10 +29,12 @@ let chart: Chart | null = null;
 const selectedMonth = ref<{ label: string; entries: MonthlyRevenueItem[] } | null>(null);
 const loadingMonth = ref(false);
 
-function monthlyTotals(data: YearlyRevenueItem[]): number[] {
+function monthlyTotals(data: YearlyRevenueItem[], destination: Destination): number[] {
     const buckets = Array(12).fill(0);
     for (const row of data) {
-        buckets[row.month - 1] += row.revenue;
+        if (row.destination === destination) {
+            buckets[row.month - 1] += row.revenue;
+        }
     }
     return buckets;
 }
@@ -43,18 +49,19 @@ function initChart() {
         type: "line",
         data: {
             labels: [...MONTH_LABELS],
-            datasets: [
-                {
-                    label: t("revenueChart.title"),
+            datasets: DESTINATION_LIST.map((destination, index) => {
+                return {
+                    label: t(`common.destination.${destination}`),
                     data: Array(12).fill(0),
-                    borderColor: getCssVar("--primary"),
-                    backgroundColor: getCssVar("--primary05"),
+                    borderColor: getCssVar(DESTINATION_COLOR_VARS[index] ?? "--primary"),
+                    backgroundColor: getCssVar(DESTINATION_BG_COLOR_VARS[index] ?? "--primary05"),
                     fill: true,
+                    order: destination === SLOVYANSKIY ? 1 : 0,
                     tension: 0.3,
                     pointHoverRadius: 8,
                     pointHitRadius: 16,
-                },
-            ],
+                };
+            }),
         },
         options: {
             responsive: true,
@@ -100,8 +107,21 @@ function initChart() {
                     clip: false,
                     color: getCssVar("--text"),
                     font: { size: 11 },
-                    display: (ctx) => (ctx.dataset.data[ctx.dataIndex] as number) > 0,
-                    formatter: (value: number) => `€${value.toLocaleString()}`,
+                    display: (ctx) => {
+                        const values = ctx.chart.data.datasets.map(
+                            (dataset) => Number(dataset.data[ctx.dataIndex]) || 0,
+                        );
+                        const highestRevenue = Math.max(...values);
+                        return highestRevenue > 0
+                            && ctx.datasetIndex === values.indexOf(highestRevenue);
+                    },
+                    formatter: (_value, ctx) => {
+                        const total = ctx.chart.data.datasets.reduce(
+                            (sum, dataset) => sum + (Number(dataset.data[ctx.dataIndex]) || 0),
+                            0,
+                        );
+                        return `€${total.toLocaleString()}`;
+                    },
                 },
                 legend: {
                     labels: { color: getCssVar("--text") },
@@ -115,12 +135,14 @@ async function applyData(data: YearlyRevenueItem[]) {
     if (!chart) return;
     await nextTick();
 
-    const dataset = chart.data.datasets[0];
-    if (!dataset) return;
+    DESTINATION_LIST.forEach((destination, index) => {
+        const dataset = chart?.data.datasets[index];
+        if (!dataset) return;
 
-    (dataset.data as number[]).splice(
-        0, 12, ...monthlyTotals(data)
-    );
+        (dataset.data as number[]).splice(
+            0, 12, ...monthlyTotals(data, destination)
+        );
+    });
 
     chart.update();
 }
@@ -131,8 +153,9 @@ watch(
         if (!chart) return;
         selectedMonth.value = null;
         if (!data.length) {
-            const dataset = chart.data.datasets[0];
-            if (dataset) (dataset.data as number[]).fill(0);
+            chart.data.datasets.forEach((dataset) => {
+                (dataset.data as number[]).fill(0);
+            });
             chart.update();
             return;
         }

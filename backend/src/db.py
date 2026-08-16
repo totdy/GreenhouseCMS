@@ -74,11 +74,12 @@ def GetYearlyRevenue(year: int) -> list[YearlyRevenueItem]:
         query = (
             select(
                 extract('month', Harvests.date).label("month"),
+                Harvests.destination,
                 func.round(func.sum(Harvests.count * Harvests.unit_price), 2).label("revenue")
             )
             .filter(Harvests.date.between(f"{year}-01-01", f"{year}-12-31"))
-            .group_by(extract('month', Harvests.date))
-            .order_by(extract('month', Harvests.date))
+            .group_by(extract('month', Harvests.date), Harvests.destination)
+            .order_by(extract('month', Harvests.date), Harvests.destination)
         )
         result = new_session.execute(query)
         return result.all() # type: ignore

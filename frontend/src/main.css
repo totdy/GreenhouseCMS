@@ -12,14 +12,18 @@
     --primary: hsl(79 41% 57%);
     --primary05: hsla(79, 41%, 57%, 0.5);
     --secondary: hsl(267 72% 78%);
+    --secondary05: hsla(267, 72%, 78%, 0.5);
 
     --highlight: hsla(75, 84%, 24%, 0.5);
     --neutral: hsl(0 0% 95%);
 
     --danger: hsl(8 63% 66%);
     --warning: hsl(52 49% 46%);
+    --warning05: hsla(52, 49%, 46%, 0.5);
     --success: hsl(151 41% 51%);
+    --success05: hsla(151, 41%, 51%, 0.5);
     --info: hsl(217 73% 68%);
+    --info05: hsla(217, 73%, 68%, 0.5);
 }
 
 :root[data-theme="dark"] {
@@ -35,14 +39,18 @@
     --primary: hsl(73 100% 11%);
     --primary05: hsla(73, 100%, 11%, 0.5);
     --secondary: hsl(269 41% 34%);
+    --secondary05: hsla(269, 41%, 34%, 0.5);
 
     --highlight: hsla(75, 84%, 24%, 0.5);
     --neutral: hsl(0 0% 5%);
 
     --danger: hsl(7 47% 42%);
     --warning: hsl(53 100% 17%);
+    --warning05: hsla(52, 49%, 46%, 0.5);    
     --success: hsl(161 100% 19%);
+    --success05: hsla(151, 41%, 51%, 0.5);
     --info: hsl(217 50% 44%);
+    --info05: hsla(217, 73%, 68%, 0.5);
 }
 
 * {
