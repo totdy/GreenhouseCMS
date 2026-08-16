@@ -4,6 +4,7 @@ import type { HarvestIn } from "@/scripts/types"
 import { AddHarvests } from "@/scripts/api"
 import { useHarvest } from "@/scripts/useHarvest"
 import { DEFAULT_PLANT, PLANT_LIST } from "@/scripts/plants"
+import { DESTINATION_LIST, isDestination, type Destination } from "@/scripts/destinations"
 
 import { useI18n } from 'vue-i18n'
 import PopUp from "./PopUp.vue"
@@ -14,21 +15,39 @@ const error = ref<string | null>(null)
 const successMsg = ref<string | null>(null)
 
 const globalDate = ref(new Date().toISOString().split("T")[0] || "")
+const globalDestination = ref<Destination | "">("")
 
 watch(globalDate, (newDate) => {
     rows.value.forEach(row => row.date = newDate)
 })
 
+watch(globalDestination, (newDestination) => {
+    rows.value.forEach(row => row.destination = newDestination)
+})
+
 const { loadPage } = useHarvest()
 
-const createEmptyRow = (): HarvestIn => ({
+type HarvestFormRow = Omit<HarvestIn, "destination"> & {
+    destination: Destination | ""
+}
+
+const createEmptyRow = (): HarvestFormRow => ({
     date: globalDate.value,
     plant_type: DEFAULT_PLANT,
+    destination: globalDestination.value,
     count: 0,
     unit_price: 0,
 })
 
-const rows = ref<HarvestIn[]>([createEmptyRow()])
+const rows = ref<HarvestFormRow[]>([createEmptyRow()])
+
+function toHarvest(row: HarvestFormRow): HarvestIn {
+    if (!isDestination(row.destination)) {
+        throw new Error(t("addHarvest.msg.destinationRequired"))
+    }
+
+    return { ...row, destination: row.destination }
+}
 
 function addRow() {
     rows.value.push(createEmptyRow())
@@ -44,13 +63,13 @@ async function handleSubmit() {
     successMsg.value = null
 
     try {
-        const result = await AddHarvests({ data: rows.value })
+        const result = await AddHarvests({ data: rows.value.map(toHarvest) })
 
         successMsg.value = t("addHarvest.msg.success", { rows: result.inserted })
 
         await loadPage(1)
-    } catch (err: any) {
-        error.value = err.message
+    } catch (err: unknown) {
+        error.value = err instanceof Error ? err.message : String(err)
     } finally {
         isLoading.value = false
     }
@@ -60,12 +79,23 @@ async function handleSubmit() {
     <section>
         <h2>{{ t("addHarvest.title") }}</h2>
 
-        <div class="gDate">
-            <label>{{ t("addHarvest.date.title") }}</label>
-            <input type="date" v-model="globalDate" required />
-        </div>
-
         <form @submit.prevent="handleSubmit">
+            <div class="globalFields">
+                <div>
+                    <label>{{ t("addHarvest.date.title") }}</label>
+                    <input type="date" v-model="globalDate" required />
+                </div>
+                <div>
+                    <label>{{ t("addHarvest.destination.title") }}</label>
+                    <select v-model="globalDestination" required>
+                        <option value="" disabled></option>
+                        <option v-for="destination in DESTINATION_LIST" :key="destination" :value="destination">
+                            {{ t(`common.destination.${destination}`) }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
             <div class="rows">
                 <label>{{ t("addHarvest.type.title") }}</label>
                 <label>{{ t("addHarvest.count.title") }}</label>
@@ -110,10 +140,20 @@ form {
     flex-direction: column;
 }
 
-.gDate,
+.globalFields div,
 .rows div {
     display: flex;
     flex-direction: column;
+}
+
+.globalFields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    @media (max-width: 750px) {
+        grid-template-columns: 1fr;
+    }
 }
 
 .remove {

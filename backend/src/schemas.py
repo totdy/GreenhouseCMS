@@ -1,9 +1,12 @@
 from datetime import date, datetime
+
 from pydantic import BaseModel
+
 
 class HarvestIn(BaseModel):
     date: date
     plant_type: str
+    destination: str
     count: float
     unit_price: float
 

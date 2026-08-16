@@ -23,6 +23,7 @@ onMounted(() => loadPage(1))
     <ul v-show="harvests.length" :style="{ opacity: loadingHarvests ? 0.4 : 1 }">
       <li v-for="item in harvests" :key="item.id">
         <p>{{ t(`common.type.${item.plant_type}`) }}</p>
+        <p>{{ t(`common.destination.${item.destination}`) }}</p>
         <p>{{ item.count }} {{ t(`common.unit.${getPlantUnit(item.plant_type)}`) }}</p>
         <p>€{{ item.unit_price.toFixed(2) }}/{{ t("common.unit.title") }}</p>
         <p>{{ formatDate(item.date) }}</p>
@@ -42,7 +43,7 @@ onMounted(() => loadPage(1))
 <style lang="css" scoped>
 li {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr auto;
   gap: 1rem;
   padding: 0.75rem 0;
   border-bottom: 1px solid var(--border-muted);
@@ -50,6 +51,12 @@ li {
 
 li:last-child {
   border-bottom: none;
+}
+
+@media (max-width: 750px) {
+  li {
+    grid-template-columns: 1fr;
+  }
 }
 
 .pagination {

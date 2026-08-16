@@ -66,6 +66,13 @@
             "MiniPepper": "🌶️ Міні-перець",
             "Corn": "🌽 Кукурудза"
         },
+        "destination": {
+            "Slovyanskiy": "🪆Слов'янський",
+            "MultiCook": "💅MultiCook",
+            "Uzbecs": "🇺🇿Узбеки",
+            "Cheburechna": "🥟Чебуречна",
+            "Other": "🇺🇳Інше"
+        },
         "unit": {
             "title": "Одиниця",
             "kg": "⚫ кілограми",
@@ -91,6 +98,9 @@
         "type": {
             "title": "Тип"
         },
+        "destination": {
+            "title": "Призначення"
+        },
         "count": {
             "title": "Кількість"
         },
@@ -99,6 +109,7 @@
         },
         "msg": {
             "saving": "Збереження",
+            "destinationRequired": "Оберіть призначення",
             "success": "Успішно додано {rows} рядків!"
         }
     }

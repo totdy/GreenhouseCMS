@@ -66,6 +66,13 @@
             "MiniPepper": "🌶️ Mini pepper",
             "Corn": "🌽 Corn"
         },
+        "destination": {
+            "Slovyanskiy": "🪆Slovyanskiy",
+            "MultiCook": "💅MultiCook",
+            "Uzbecs": "🇺🇿Uzbecs",
+            "Cheburechna": "🥟Cheburechna",
+            "Other": "🇺🇳Other"
+        },
         "unit": {
             "title": "Unit",
             "kg": "⚫ kilograms",
@@ -91,14 +98,18 @@
         "type": {
             "title": "Type"
         },
+        "destination": {
+            "title": "Destination"
+        },
         "count": {
             "title": "Count"
-        },        
+        },
         "price": {
             "title": "Price"
         },
         "msg": {
             "saving": "Saving",
+            "destinationRequired": "Select a destination",
             "success": "Successfully added {rows} row(s)!"
         }
     }

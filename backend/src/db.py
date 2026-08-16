@@ -32,6 +32,7 @@ def AddHarvest(payload: HarvestPayload) -> None:
             new_entry = Harvests(
                 date = item.date,
                 plant_type = item.plant_type,
+                destination = item.destination,
                 count = item.count,
                 unit_price = item.unit_price,
             )
@@ -46,6 +47,7 @@ def UpdateHarvest(id: int, payload: HarvestIn) -> None:
             .values(
                 date = payload.date,
                 plant_type = payload.plant_type,
+                destination = payload.destination,
                 count = payload.count,
                 unit_price = payload.unit_price,
             )

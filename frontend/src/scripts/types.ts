@@ -1,8 +1,10 @@
 import type { PlantType } from "./plants"
+import type { Destination } from "./destinations"
 
 export interface HarvestIn {
   date: string
   plant_type: PlantType
+  destination: Destination
   count: number
   unit_price: number
 }
