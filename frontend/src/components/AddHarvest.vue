@@ -77,9 +77,12 @@ async function handleSubmit() {
 </script>
 <template>
     <section>
-        <h2>{{ t("addHarvest.title") }}</h2>
-
         <form @submit.prevent="handleSubmit">
+            <h2>{{ t("addHarvest.title") }}
+                <button type="submit" :disabled="isLoading || rows.length === 0">
+                    {{ isLoading ? t("addHarvest.msg.saving") + "..." : t("addHarvest.btn.submit") }}
+                </button>
+            </h2>
             <div class="globalFields">
                 <div>
                     <label>{{ t("addHarvest.date.title") }}</label>
@@ -100,7 +103,7 @@ async function handleSubmit() {
                 <label>{{ t("addHarvest.type.title") }}</label>
                 <label>{{ t("addHarvest.count.title") }}</label>
                 <label>{{ t("addHarvest.price.title") }}</label>
-                <label><button type="button" @click="addRow">{{ t("addHarvest.btn.add") }}</button></label>
+                <label></label>
             </div>
             <div v-for="(row, index) in rows" :key="index" class="rows">
                 <input v-model="row.date" type="date" required hidden />
@@ -124,9 +127,7 @@ async function handleSubmit() {
                 </div>
             </div>
 
-            <button type="submit" :disabled="isLoading || rows.length === 0">
-                {{ isLoading ? t("addHarvest.msg.saving") + "..." : t("addHarvest.btn.submit") }}
-            </button>
+            <button type="button" @click="addRow">{{ t("addHarvest.btn.add") }}</button>
 
             <PopUp v-if="successMsg" type="success" :msg="successMsg" @close="successMsg = null" />
             <PopUp v-if="error" type="error" :msg="error" @close="error = null" />
@@ -135,6 +136,12 @@ async function handleSubmit() {
     </section>
 </template>
 <style lang="css" scoped>
+h2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 form {
     display: flex;
     flex-direction: column;
