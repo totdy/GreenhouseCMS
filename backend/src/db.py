@@ -1,7 +1,8 @@
 import os
 from pathlib import Path
+from datetime import date
 
-from sqlalchemy import create_engine, extract, select, update, func
+from sqlalchemy import create_engine, extract, select, update, func, Integer, cast
 from sqlalchemy.orm import sessionmaker
 
 from src.schemas import HarvestPayload, HarvestIn, WeeklyActivityItem, YearlyActivityItem, YearlyRevenueItem, HarvestOut, MonthlyRevenueItem, MonthlyActivityItem
@@ -77,7 +78,7 @@ def GetYearlyRevenue(year: int) -> list[YearlyRevenueItem]:
                 Harvests.destination,
                 func.round(func.sum(Harvests.count * Harvests.unit_price), 2).label("revenue")
             )
-            .filter(Harvests.date.between(f"{year}-01-01", f"{year}-12-31"))
+            .filter(Harvests.date.between(date(year, 1, 1),date(year, 12, 31)))
             .group_by(extract('month', Harvests.date), Harvests.destination)
             .order_by(extract('month', Harvests.date), Harvests.destination)
         )
@@ -92,7 +93,7 @@ def GetMonthlyRevenue(year: int, month: int) -> list[MonthlyRevenueItem]:
                 Harvests.date,
                 func.round(func.sum(Harvests.count * Harvests.unit_price), 2).label("revenue")
             )
-            .filter(Harvests.date.between(f"{year}-{month:02d}-01", f"{year}-{month:02d}-{last_day:02d}"))
+            .filter(Harvests.date.between(date(year, month, 1), date(year, month, last_day)))
             .group_by(Harvests.date)
             .order_by(Harvests.date)
         )
@@ -107,7 +108,7 @@ def GetYearlyActivity(year: int) -> list[YearlyActivityItem]:
                 Harvests.plant_type,
                 func.sum(Harvests.count).label("count")
             )
-            .filter(Harvests.date.between(f"{year}-01-01", f"{year}-12-31"))
+            .filter(Harvests.date.between(date(year, 1, 1),date(year, 12, 31)))
             .group_by(extract('month', Harvests.date), Harvests.plant_type)
             .order_by(extract('month', Harvests.date))
         )
@@ -123,7 +124,7 @@ def GetMonthlyActivity(year: int, month: int) -> list[MonthlyActivityItem]:
                 Harvests.plant_type,
                 func.sum(Harvests.count).label("count")
             )
-            .filter(Harvests.date.between(f"{year}-{month:02d}-01", f"{year}-{month:02d}-{last_day:02d}"))
+            .filter(Harvests.date.between(date(year, month, 1), date(year, month, last_day)))
             .group_by(Harvests.date, Harvests.plant_type)
             .order_by(Harvests.date)
         )
@@ -132,15 +133,21 @@ def GetMonthlyActivity(year: int, month: int) -> list[MonthlyActivityItem]:
     
 def GetWeeklyActivity(year: int) -> list[WeeklyActivityItem]:
     with session() as new_session:
+
+        week = cast(
+            func.strftime("%V", Harvests.date),
+            Integer
+        ).label("week")
+
         query = (
             select(
-                extract('week', Harvests.date).label("week"),
+                week,
                 Harvests.plant_type,
                 func.sum(Harvests.count).label("count")
             )
-            .filter(Harvests.date.between(f"{year}-01-01", f"{year}-12-31"))
-            .group_by(extract('week', Harvests.date), Harvests.plant_type)
-            .order_by(extract('week', Harvests.date))
+            .filter(Harvests.date.between(date(year, 1, 1),date(year, 12, 31)))
+            .group_by(week,Harvests.plant_type)
+            .order_by(week)
         )
         result = new_session.execute(query)
-        return result.all() # type: ignore
+        return result.all()  # type: ignore 
