@@ -111,6 +111,13 @@
             "saving": "Saving",
             "destinationRequired": "Select a destination",
             "success": "Successfully added {rows} row(s)!"
+        },
+        "validation": {
+            "title": "Confirm harvest",
+            "products": "Products",
+            "cancel": "Back to editing",
+            "confirm": "Confirm and submit",
+            "close": "Close confirmation"
         }
     }
 }

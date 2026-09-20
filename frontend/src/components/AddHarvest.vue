@@ -13,6 +13,7 @@ const { t } = useI18n()
 const isLoading = ref(false)
 const error = ref<string | null>(null)
 const successMsg = ref<string | null>(null)
+const validationModal = ref<HTMLDialogElement | null>(null)
 
 const globalDate = ref(new Date().toISOString().split("T")[0] || "")
 const globalDestination = ref<Destination | "">("")
@@ -74,10 +75,23 @@ async function handleSubmit() {
         isLoading.value = false
     }
 }
+
+function openValidationModal() {
+    validationModal.value?.showModal()
+}
+
+function closeValidationModal() {
+    validationModal.value?.close()
+}
+
+async function confirmSubmit() {
+    closeValidationModal()
+    await handleSubmit()
+}
 </script>
 <template>
     <section>
-        <form @submit.prevent="handleSubmit">
+        <form @submit.prevent="openValidationModal">
             <h2>{{ t("addHarvest.title") }}
                 <button type="submit" :disabled="isLoading || rows.length === 0">
                     {{ isLoading ? t("addHarvest.msg.saving") + "..." : t("addHarvest.btn.submit") }}
@@ -133,6 +147,40 @@ async function handleSubmit() {
             <PopUp v-if="error" type="error" :msg="error" @close="error = null" />
 
         </form>
+
+        <dialog ref="validationModal" class="validationModal">
+            <div class="modalHeader">
+                <h3>{{ t("addHarvest.validation.title") }}</h3>
+                <button type="button" class="close" :aria-label="t('addHarvest.validation.close')" @click="closeValidationModal">
+                    ×
+                </button>
+            </div>
+
+            <dl>
+                <div>
+                    <dt>{{ t("addHarvest.date.title") }}</dt>
+                    <dd>{{ globalDate }}</dd>
+                </div>
+                <div>
+                    <dt>{{ t("addHarvest.destination.title") }}</dt>
+                    <dd>{{ globalDestination ? t(`common.destination.${globalDestination}`) : "" }}</dd>
+                </div>
+            </dl>
+
+            <h4>{{ t("addHarvest.validation.products") }}</h4>
+            <ul>
+                <li v-for="(row, index) in rows" :key="index">
+                    {{ t(`common.type.${row.plant_type}`) }} — {{ row.count }} - €{{ row.unit_price }}
+                </li>
+            </ul>
+
+            <div class="modalActions">
+                <button class="cancel" type="button" @click="closeValidationModal">{{ t("addHarvest.validation.cancel") }}</button>
+                <button class="confirm" type="button" :disabled="isLoading" @click="confirmSubmit">
+                    {{ isLoading ? t("addHarvest.msg.saving") + "..." : t("addHarvest.validation.confirm") }}
+                </button>
+            </div>
+        </dialog>
     </section>
 </template>
 <style lang="css" scoped>
@@ -172,12 +220,56 @@ form {
     grid-template-columns: 1fr 1fr 1fr auto;
     gap: 1rem;
 
-    border-bottom: 1px solid var(--bg2);
+    border-bottom: 1px solid var(--border);
 
     padding: 0.75rem 0;
 
     @media (max-width: 750px) {
         grid-template-columns: 1fr;
     }
+}
+
+.validationModal {
+    width: min(100% - 2rem, 30rem);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    background: var(--bg);
+    margin: auto;
+}
+
+.validationModal::backdrop {
+    background: var(--secondary05);
+}
+
+.modalHeader,
+.modalActions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.close {
+    width: auto;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+dl {
+    margin: 1.25rem 0;
+}
+
+dl div {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+ul {
+    margin: 0.75rem 0 1.25rem;
+    padding-left: 1.25rem;
 }
 </style>
